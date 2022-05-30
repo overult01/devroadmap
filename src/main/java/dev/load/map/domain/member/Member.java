@@ -40,4 +40,17 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
     
+    // 필수값만 있는 생성자 (가입시)
+    @Builder
+	public Member(String oauthid, Provider provider, String nickname, String email) {
+        this.oauthid = oauthid;
+        this.provider = provider; 
+        this.nickname = nickname; 
+        this.email = email; 
+    }
+
+
+	public String getRoleString() {
+		return this.role.toString();
+	}
 }

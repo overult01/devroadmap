@@ -22,7 +22,6 @@ import dev.load.map.domain.member.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import multi.fclass.iMint.member.dto.MemberDTO;
 
 /**
  * @author Jungmin, Yang
@@ -133,14 +132,12 @@ public class OAuthAttributes {
 	            .build();
 	}
 
-//	public Member toEntity() {
-//        return Member.builder()
-//        .oauthid (oauthid)
-//        .provider (provider) 
-//        .nickname (nickname) 
-//        .email (email) 
-//        .isdelete (false) 
-//        .build();		
-//	}
-
+	public Member toEntity() {
+        return Member.builder()
+        .oauthid (oauthid)
+        .provider (provider) 
+        .nickname (nickname) 
+        .email (email) 
+        .build();		
+	}
 }
