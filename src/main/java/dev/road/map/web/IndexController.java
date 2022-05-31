@@ -31,5 +31,4 @@ public class IndexController {
 		memberRepository.save(member);
 	}
 	
-
 }
