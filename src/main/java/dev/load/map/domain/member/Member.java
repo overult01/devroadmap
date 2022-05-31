@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import dev.load.map.config.security.oauth.OAuthAttributes.OAuthAttributesBuilder;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
