@@ -8,7 +8,7 @@ import lombok.Getter;
 public class SessionMember {
 
     private Long id;
-    private String oauthid;    
+    private String oauthId;    
     private Provider provider;
     private String nickname;
     private String email;
@@ -22,7 +22,7 @@ public class SessionMember {
     
 	public SessionMember(Member member) {
 		this.id = member.getId();
-		this.oauthid = member.getOauthid();
+		this.oauthId = member.getOauthId();
 		this.provider = member.getProvider();
 		this.nickname = member.getNickname();
 		this.email = member.getEmail();

@@ -5,12 +5,9 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +20,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String oauthid;    
+    private String oauthId;    
     @Enumerated(EnumType.STRING)
     private Provider provider;
     private String nickname;
@@ -41,13 +38,12 @@ public class Member {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public Member(String oauthid, Provider provider, String nickname, String email) {
-        this.oauthid = oauthid;
+	public Member(String oauthId, Provider provider, String nickname, String email) {
+        this.oauthId = oauthId;
         this.provider = provider; 
         this.nickname = nickname; 
         this.email = email; 
     }
-
 
 	public String getRoleString() {
 		return this.role.toString();
