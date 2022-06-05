@@ -1,6 +1,6 @@
 package dev.road.map.domain.member;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 
@@ -17,7 +17,7 @@ public class SessionMember {
     private String profile;
     private Boolean unmatching;
     private String pin;
-    private LocalDateTime joindate;
+    private Timestamp joindate;
     private Role role;
     
 	public SessionMember(Member member) {

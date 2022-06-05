@@ -1,7 +1,8 @@
 package dev.road.map.domain;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import dev.road.map.domain.member.Member;
 import lombok.Getter;
@@ -20,6 +23,7 @@ public class Guestbook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private Long id;
     
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
@@ -31,6 +35,10 @@ public class Guestbook {
     private Member you;
 	
     private String message;
-    private LocalDateTime writedate;
+	
+    @CreationTimestamp
+	private Timestamp writedate;
+
+    @Column(nullable = false)
     private Boolean isdelete;
 }
