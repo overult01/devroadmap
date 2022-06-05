@@ -2,6 +2,8 @@ package dev.road.map.dto;
 
 import java.sql.Timestamp;
 
+import org.springframework.stereotype.Component;
+
 import dev.road.map.domain.member.Field;
 import dev.road.map.domain.member.Member;
 import dev.road.map.domain.member.Provider;
@@ -16,10 +18,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
+@Component
 public class MemberDTO {
 
 	private Long id;
-    private String oauthId;  
+    private String oauthid;  
     private Provider provider;
     private String nickname;
     private String email;
@@ -33,10 +36,19 @@ public class MemberDTO {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public MemberDTO(String oauthId, Provider provider, String nickname, String email) {
-        this.oauthId = oauthId;
+	public MemberDTO(String oauthid, Provider provider, String nickname, String email) {
+        this.oauthid = oauthid;
         this.provider = provider; 
         this.nickname = nickname; 
         this.email = email; 
-    }    
+    }  
+   
+    public Member ToMember(MemberDTO memberDTO) {
+    	return Member.builder()
+    	.oauthid(memberDTO.getOauthid())
+    	.email(memberDTO.getEmail())
+    	.nickname(memberDTO.getNickname())
+    	.provider(memberDTO.getProvider())
+    	.build();
+    }
 }

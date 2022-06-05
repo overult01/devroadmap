@@ -56,7 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
         
-        String oauthId = provider + "_" + userNameAttributeName;
+        String oauthid = provider + "_" + userNameAttributeName;
         
         System.out.println("======");
         System.out.println(provider);
@@ -84,31 +84,31 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 mapmemberAttribute, // attributes 그 자체 
-                "oauthId" // oauthId(provider + "_" + 고객식별자 
+                "oauthid" // oauthid(provider + "_" + 고객식별자 
         );
     }
 
     // 유저가 최초 로그인인지, 기존 유저인지 확인
-    private Member SaveOrUpdate(OAuthAttributes attributes) {
-    	
-        Member member;
-        
-        if(memberRepository.findByOauthId(attributes.getOauthId()) != null){
-            System.out.println("이미 가입되어 있는 회원입니다.");
-            member = memberRepository.findByOauthId(attributes.getOauthId());
-        }
-        
-        // 최초 로그인한 유저면 자동 가입 실행
-        else {
-        	member = attributes.toEntity();
-        	member.setNickname(member.getNickname() +  + (int)(Math.random() * 10000 + 1)); // 닉네임에 랜덤값 추가
-            memberRepository.save(member);
-            
-            System.out.println("최초 로그인으로 자동 가입됩니다.");
-            member = memberRepository.findByOauthId(attributes.getOauthId());
-        }
-
-        return member;
-    }
+//    private Member SaveOrUpdate(OAuthAttributes attributes) {
+//    	
+//        Member member;
+//        
+//        if(memberRepository.findByOauthId(attributes.getOauthId()) != null){
+//            System.out.println("이미 가입되어 있는 회원입니다.");
+//            member = memberRepository.findByOauthId(attributes.getOauthId());
+//        }
+//        
+//        // 최초 로그인한 유저면 자동 가입 실행
+//        else {
+//        	member = attributes.toEntity();
+//        	member.setNickname(member.getNickname() +  + (int)(Math.random() * 10000 + 1)); // 닉네임에 랜덤값 추가
+//            memberRepository.save(member);
+//            
+//            System.out.println("최초 로그인으로 자동 가입됩니다.");
+//            member = memberRepository.findByOauthId(attributes.getOauthId());
+//        }
+//
+//        return member;
+//    }
 
 }

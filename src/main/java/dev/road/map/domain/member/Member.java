@@ -14,22 +14,23 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import dev.road.map.dto.MemberDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "oauthId")})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "oauthid")})
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     
-    @Column(nullable = false)
-    private String oauthId;  
+    @Column(name = "oauthid", nullable = false)
+    private String oauthid;  
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,8 +62,8 @@ public class Member {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public Member(String oauthId, Provider provider, String nickname, String email) {
-        this.oauthId = oauthId;
+	public Member(String oauthid, Provider provider, String nickname, String email) {
+        this.oauthid = oauthid;
         this.provider = provider; 
         this.nickname = nickname; 
         this.email = email; 

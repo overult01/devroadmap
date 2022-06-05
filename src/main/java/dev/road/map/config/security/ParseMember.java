@@ -21,23 +21,23 @@ public class ParseMember {
 	@Autowired
 	MemberRepository memberRepository;
 	
-	// oauthId파싱
-	public String parseOauthId(Authentication auth) {
+	// oauthid파싱
+	public String parseOauthid(Authentication auth) {
 		DefaultOAuth2User authorization = (DefaultOAuth2User) auth.getPrincipal();
 
-		String oauthId = null;
+		String oauthid = null;
 		String customerId = null;
 		
 		// 구글
-		if(auth.getName().length() <= 40 & memberRepository.findByOauthId("google_" + auth.getName().toString()) != null) { 
-			oauthId = "google_" + auth.getName();
-			return oauthId;
+		if(auth.getName().length() <= 40 & memberRepository.findByOauthid("google_" + auth.getName().toString()) != null) { 
+			oauthid = "google_" + auth.getName();
+			return oauthid;
 		}
 		
 		// 카카오 
 		else {
 			customerId = authorization.getName();
-			oauthId = "kakao_" + customerId;
+			oauthid = "kakao_" + customerId;
 			
 			// 네이버 (임시 숫자 크기 지정)
 			Map<String, Object> naverMap = null;
@@ -45,31 +45,31 @@ public class ParseMember {
 				naverMap = authorization.getAttributes();
 				naverMap = (Map<String, Object>) naverMap.get("response");
 				customerId = (String) naverMap.get("id");
-				oauthId = "naver_" + customerId;
+				oauthid = "naver_" + customerId;
 			}
 		}
 
-		return oauthId;
+		return oauthid;
 	}
 	
 	// Member 파싱 
 	public MemberDTO parseMemberDTO(Authentication auth) {
 		DefaultOAuth2User authorization = (DefaultOAuth2User) auth.getPrincipal();
 
-		String oauthId = null;
+		String oauthid = null;
 		Provider provider = null; 
 		String nickname = null; 
 		String email = null; 
 		String customerId = null;
 
 		// 구글
-		if(auth.getName().length() <= 40 & memberRepository.findByOauthId("google_" + auth.getName().toString()) != null) { 
-			oauthId = "google_" + auth.getName();
+		if(auth.getName().length() <= 40 & memberRepository.findByOauthid("google_" + auth.getName().toString()) != null) { 
+			oauthid = "google_" + auth.getName();
 			provider = Provider.google;
 			
 			return 
 			MemberDTO.builder()
-			.oauthId(oauthId)
+			.oauthid(oauthid)
 			.provider(provider)
 			.nickname(nickname)
 			.email(email)
@@ -79,7 +79,7 @@ public class ParseMember {
 		// 카카오 
 		else {
 			customerId = authorization.getName();
-			oauthId = "kakao_" + customerId;
+			oauthid = "kakao_" + customerId;
 			provider = Provider.kakao;
 			
 			// 네이버 (임시 숫자 크기 지정)
@@ -88,13 +88,13 @@ public class ParseMember {
 				naverMap = authorization.getAttributes();
 				naverMap = (Map<String, Object>) naverMap.get("response");
 				customerId = (String) naverMap.get("id");
-				oauthId = "naver_" + customerId;
+				oauthid = "naver_" + customerId;
 				provider = Provider.naver;
 			}
 			
 			return 
 			MemberDTO.builder()
-			.oauthId(oauthId)
+			.oauthid(oauthid)
 			.provider(provider)
 			.nickname(nickname)
 			.email(email)

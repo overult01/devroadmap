@@ -24,7 +24,7 @@ public class OAuthAttributes {
     private String nameAttributeKey;
 
     private Long id;
-    private String oauthId;    
+    private String oauthid;    
     private Provider provider;
     private String nickname;
     private String email;
@@ -38,13 +38,13 @@ public class OAuthAttributes {
     private Boolean isdelete;
 	
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, Long id, String oauthId, Provider provider,
+    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, Long id, String oauthid, Provider provider,
     		String nickname, String email, Type type, Field field,
     	    String profile, Boolean unmatching, String pin, LocalDateTime joinDate, Boolean isdelete, Role role) {
     	super();
     	this.attributes = attributes;
     	this.nameAttributeKey = nameAttributeKey;
-    	this.oauthId = oauthId;
+    	this.oauthid = oauthid;
     	this.provider = provider;
     	this.nickname = nickname;
     	this.email = email;
@@ -74,7 +74,7 @@ public class OAuthAttributes {
                                            Map<String, Object> attributes) {
     	System.out.println("구글 로그인 호출");
         return OAuthAttributes.builder()
-            	.oauthId ("google_"+(String) attributes.get("sub"))
+            	.oauthid ("google_"+(String) attributes.get("sub"))
             	.provider (Provider.google) 
             	.nickname ((String) attributes.get("name"))
             	.email ((String) attributes.get("email")) 
@@ -92,7 +92,7 @@ public class OAuthAttributes {
 		System.out.println("response: " + oAuth2UserInfo.getEmail());
 
 		return OAuthAttributes.builder()
-	            .oauthId ("naver_"+(String) oAuth2UserInfo.getOauthId())
+	            .oauthid ("naver_"+(String) oAuth2UserInfo.getOauthId())
 	            .provider (Provider.naver) 
 	            .nickname ((String) oAuth2UserInfo.getNick()) 
 	            .email ((String) oAuth2UserInfo.getEmail()) 
@@ -110,7 +110,7 @@ public class OAuthAttributes {
 		System.out.println("response: " + oAuth2UserInfo.getEmail());
 
 		return OAuthAttributes.builder()
-	            .oauthId ("kakao_"+(String) oAuth2UserInfo.getOauthId())
+	            .oauthid ("kakao_"+(String) oAuth2UserInfo.getOauthId())
 	            .provider (Provider.kakao) 
 	            .nickname ((String) oAuth2UserInfo.getNick()) 
 	            .email ((String) oAuth2UserInfo.getEmail()) 
@@ -122,7 +122,7 @@ public class OAuthAttributes {
 
 	public Member toEntity() {
         return Member.builder()
-        .oauthId (oauthId)
+        .oauthid (oauthid)
         .provider (provider) 
         .nickname (nickname) 
         .email (email) 
@@ -132,7 +132,7 @@ public class OAuthAttributes {
 	public Map<String, Object> convertToMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("oauthId", oauthId);
+        map.put("oauthid", oauthid);
         map.put("name", nickname);
         map.put("email", email);
         map.put("provider", provider);

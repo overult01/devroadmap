@@ -42,9 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.formLogin().disable() // formLogin 미사용
 		.httpBasic().disable() // 기본 로그인 방식 미사용
 		
-        .oauth2Login().loginPage("/token/expired")
-        .successHandler(successHandler);
-
+        .oauth2Login()
+        // .loginPage("token/expire")
+        .defaultSuccessUrl("http://localhost:3000/")
+        .successHandler(successHandler)
+		.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
+		.userService(customOAuth2UserService);
+		
         http
 //        .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class) // 모든 요청은 이 필터를 거친다.(CorsConfig에서 설정한 corsFilter)
         .addFilterBefore(new JwtAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
@@ -59,14 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/mail**").permitAll()
 				.anyRequest().authenticated();
 
-		// 기본 로그인 해제
-		http.httpBasic().disable();
-
 		http.logout().logoutSuccessUrl("/");
 
-		http.oauth2Login().defaultSuccessUrl("/") // oauth2 로그인
-				.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
-				.userService(customOAuth2UserService);
+//		http.oauth2Login().defaultSuccessUrl("http://localhost:3000/") // oauth2 로그인
+//				.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
+//				.userService(customOAuth2UserService);
 //
 //		http.sessionManagement().invalidSessionUrl("/") // 유효하지 않은 세션 접근시 보낼 URL
 //				.maximumSessions(1) // 중복 로그인 방지
