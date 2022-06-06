@@ -11,15 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.Provider;
+import dev.road.map.domain.user.Provider;
+import dev.road.map.domain.user.User;
 
 @ExtendWith(SpringExtension.class) // 스프링부트, JUnit사이 연결
 @SpringBootTest
 class DevRoadMapApplicationTests {
 
 //	@Autowired
-//	MemberRepository memberRepository;
+//	UserRepository memberRepository;
 //	
 //	@After
 //	public void cleanup() {
@@ -34,7 +34,7 @@ class DevRoadMapApplicationTests {
 //        String nickname = "user"; 
 //        String email = "email@gmail.com"; 
 //        
-//        memberRepository.save(Member.builder()
+//        memberRepository.save(User.builder()
 //        		.oauthid(oauthid)
 //        		.provider(provider)
 //        		.email(email)
@@ -42,10 +42,10 @@ class DevRoadMapApplicationTests {
 //        		.build());
 //        
 //        // when
-//        List<Member> memberList = memberRepository.findAll();
+//        List<User> memberList = memberRepository.findAll();
 //        
 //        // then
-//        Member member = memberList.get(0);
+//        User member = memberList.get(0);
 //        assertThat(member.getOauthid().equals(oauthid));
 //        assertThat(member.getProvider().equals(provider));
 //        
