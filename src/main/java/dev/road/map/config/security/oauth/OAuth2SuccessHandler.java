@@ -12,11 +12,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import dev.road.map.config.security.ParseUser;
 import dev.road.map.config.security.Token;
+import dev.road.map.config.security.TokenService;
 import dev.road.map.domain.user.Role;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 import dev.road.map.dto.UserDTO;
-import dev.road.map.service.TokenService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 
@@ -51,9 +51,9 @@ public class OAuth2SuccessHandler  extends SimpleUrlAuthenticationSuccessHandler
         
         String targetUrl;
 
-        Token token = tokenService.generateToken(memberDTO.getOauthid(), Role.user);
+        String token = tokenService.generateToken(member);
         
-        String target = "http://localhost:3000/";
+        String target = "http://localhost:3000";
         
 //        if (memberDTO.getProvider() == Provider.google) {
 //			target = "http://localhost:3000/";

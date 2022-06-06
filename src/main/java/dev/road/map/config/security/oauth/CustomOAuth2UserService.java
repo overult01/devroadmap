@@ -21,10 +21,6 @@ import dev.road.map.domain.user.UserRepository;
 import dev.road.map.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 
-/**
- * @author Jungmin, Yang
- */
-
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {

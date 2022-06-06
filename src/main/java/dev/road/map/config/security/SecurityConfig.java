@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import dev.road.map.config.security.jwt.JwtAuthFilter;
 import dev.road.map.config.security.oauth.CustomOAuth2UserService;
 import dev.road.map.config.security.oauth.OAuth2SuccessHandler;
-import dev.road.map.service.TokenService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -44,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
         .oauth2Login()
         // .loginPage("token/expire")
-        .defaultSuccessUrl("http://localhost:3000/")
+        .defaultSuccessUrl("http://localhost:3000")
         .successHandler(successHandler)
 		.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
 		.userService(customOAuth2UserService);

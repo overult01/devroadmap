@@ -22,6 +22,11 @@ public class IndexController {
 	@Autowired
 	UserRepository memberRepository;
 	
+    @GetMapping("/hello")
+    public String test() {
+        return "Hello, world!";
+    }
+	
 	// http://localhost:8080/login/oauth2/code/google?state=CcTjQR04JGhL9Eyw5Bza_hWElbiYWK_iS9-EUGC9haM%3D&code=4%2F0AX4XfWhn7YnbPllfNzd4YDjKnXyj_iq3nvoZN2WrYWu-yTGATVMGzZEp2OrA6l7Y8mjxpw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent
 	// http://localhost:3000/oauth2/authorization/google
 //	@RequestMapping("/oauth2/{provider}")
