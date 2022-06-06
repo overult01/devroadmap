@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.road.map.domain.member.MemberRepository;
+import dev.road.map.domain.user.UserRepository;
 
 @RestController("member")
-public class MemberController {
+public class UserController {
 
 	@Autowired
-	MemberRepository memberRepository;
+	UserRepository memberRepository;
 	
 }

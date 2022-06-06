@@ -13,10 +13,12 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import dev.road.map.domain.member.Member;
+import dev.road.map.domain.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
 @Getter @Setter
 public class History {
@@ -28,10 +30,11 @@ public class History {
     
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
 	@JoinColumn(name = "oauthid", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
-    private Member member;
+    private User user;
 
-    private Long subjects_id;
-    private String subjects_title;
+	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
+	@JoinColumn(name = "subjects_id", insertable=false, updatable=false) // subjects_id 컬럼이 pk, fk 관계 	
+    private Subjects subjects;
     
 	@CreationTimestamp
 	private Timestamp completedate;    

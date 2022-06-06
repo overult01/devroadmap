@@ -1,13 +1,13 @@
-package dev.road.map.domain.member;
+package dev.road.map.domain.user;
 
 import java.sql.Timestamp;
 
 import lombok.Getter;
 
 @Getter
-public class SessionMember {
+public class SessionUser {
 
-    private Long id;
+//    private Long id;
     private String oauthid;    
     private Provider provider;
     private String nickname;
@@ -20,8 +20,8 @@ public class SessionMember {
     private Timestamp joindate;
     private Role role;
     
-	public SessionMember(Member member) {
-		this.id = member.getId();
+	public SessionUser(User member) {
+//		this.id = member.getId();
 		this.oauthid = member.getOauthid();
 		this.provider = member.getProvider();
 		this.nickname = member.getNickname();

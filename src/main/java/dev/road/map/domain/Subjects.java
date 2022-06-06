@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import dev.road.map.domain.member.Field;
+import dev.road.map.domain.user.Field;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
 @Getter @Setter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "title")})

@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import dev.road.map.config.security.Token;
-import dev.road.map.domain.member.Role;
+import dev.road.map.domain.user.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

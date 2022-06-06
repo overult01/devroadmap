@@ -7,11 +7,11 @@ import java.util.Map;
 import dev.road.map.config.security.oauth.provider.KakaoUserInfo;
 import dev.road.map.config.security.oauth.provider.NaverUserInfo;
 import dev.road.map.config.security.oauth.provider.OAuth2UserInfo;
-import dev.road.map.domain.member.Field;
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.Provider;
-import dev.road.map.domain.member.Role;
-import dev.road.map.domain.member.Type;
+import dev.road.map.domain.user.Field;
+import dev.road.map.domain.user.Provider;
+import dev.road.map.domain.user.Role;
+import dev.road.map.domain.user.Type;
+import dev.road.map.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -120,8 +120,8 @@ public class OAuthAttributes {
 	            .build();
 	}
 
-	public Member toEntity() {
-        return Member.builder()
+	public User toEntity() {
+        return User.builder()
         .oauthid (oauthid)
         .provider (provider) 
         .nickname (nickname) 

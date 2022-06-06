@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import dev.road.map.dto.MemberDTO;
+import dev.road.map.dto.UserDTO;
 import dev.road.map.service.TokenService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class JwtAuthFilter extends GenericFilterBean {
             String oauthid = tokenService.getUid(token);
 
             // DB연동을 안했으니 이메일 정보로 유저를 만들어주겠습니다
-            MemberDTO memberDTO = MemberDTO.builder()
+            UserDTO memberDTO = UserDTO.builder()
                     .oauthid(oauthid)
                     .provider(null) // 임시 null
             		.nickname(null)
@@ -51,7 +51,7 @@ public class JwtAuthFilter extends GenericFilterBean {
 		}
     }
 
-    public Authentication getAuthentication(MemberDTO member) {
+    public Authentication getAuthentication(UserDTO member) {
         return new UsernamePasswordAuthenticationToken(member, "",
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
     }

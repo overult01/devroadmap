@@ -13,10 +13,12 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import dev.road.map.domain.member.Member;
+import dev.road.map.domain.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
 @Getter @Setter
 public class Guestbook {
@@ -27,12 +29,12 @@ public class Guestbook {
     private Long id;
     
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
-    private Member me;
+	@JoinColumn(name = "oauthid_me", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+    private User user1;
 	
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
-    private Member you;
+	@JoinColumn(name = "oauthid_you", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+    private User user2;
 	
     private String message;
 	

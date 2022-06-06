@@ -1,6 +1,6 @@
 package dev.road.map.config.security.oauth.provider;
 
-import dev.road.map.domain.member.Provider;
+import dev.road.map.domain.user.Provider;
 
 /**
  * @author Jungmin, Yang

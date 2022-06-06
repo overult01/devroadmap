@@ -15,10 +15,10 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.MemberRepository;
-import dev.road.map.domain.member.SessionMember;
-import dev.road.map.dto.MemberDTO;
+import dev.road.map.domain.user.SessionUser;
+import dev.road.map.domain.user.User;
+import dev.road.map.domain.user.UserRepository;
+import dev.road.map.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-	public MemberRepository memberRepository;
+	public UserRepository memberRepository;
 	private final HttpSession httpSession;
     
     @Override
@@ -67,7 +67,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attributes = OAuthAttributes
                 .of(provider, userNameAttributeName, oAuth2User.getAttributes()); // 로그인, 로그인한 유저 정보 받아오기
         
-        // Member member = SaveOrUpdate(attributes);
+        // User member = SaveOrUpdate(attributes);
         
 //        member = attributes.toEntity();
 //    	member.setNickname(member.getNickname() + (int)(Math.random() * 10000 + 1)); // 닉네임에 랜덤값 추가
@@ -79,7 +79,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 //    	member = memberRepository.findByOauthId(provider + "_" + attributes.getId());        
        
         // SessioUser: 세션에 사용자 정보를 저장하기 위한 클래스 (개발자가 생성)
-        // httpSession.setAttribute("member", new SessionMember(member));
+        // httpSession.setAttribute("member", new SessionUser(member));
         
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
@@ -89,9 +89,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     // 유저가 최초 로그인인지, 기존 유저인지 확인
-//    private Member SaveOrUpdate(OAuthAttributes attributes) {
+//    private User SaveOrUpdate(OAuthAttributes attributes) {
 //    	
-//        Member member;
+//        User member;
 //        
 //        if(memberRepository.findByOauthId(attributes.getOauthId()) != null){
 //            System.out.println("이미 가입되어 있는 회원입니다.");

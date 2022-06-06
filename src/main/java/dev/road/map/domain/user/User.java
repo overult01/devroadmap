@@ -1,4 +1,4 @@
-package dev.road.map.domain.member;
+package dev.road.map.domain.user;
 
 import java.sql.Timestamp;
 
@@ -14,39 +14,39 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import dev.road.map.dto.MemberDTO;
+import dev.road.map.dto.UserDTO;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
 @Getter @Setter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "oauthid")})
-public class Member {
+public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(nullable = false)
+//    private Long id;
     
-    @Column(name = "oauthid", nullable = false)
+    @Id
+    @Column(length = 150, name = "oauthid", nullable = false)
     private String oauthid;  
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Provider provider;
     
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String nickname;
     
     private String email;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Type type;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Field field;
 
 	@CreationTimestamp
@@ -57,12 +57,12 @@ public class Member {
     private String pin;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Role role;
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public Member(String oauthid, Provider provider, String nickname, String email) {
+	public User(String oauthid, Provider provider, String nickname, String email) {
         this.oauthid = oauthid;
         this.provider = provider; 
         this.nickname = nickname; 

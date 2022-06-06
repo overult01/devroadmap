@@ -7,19 +7,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
 
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.MemberRepository;
-import dev.road.map.domain.member.Provider;
-import dev.road.map.dto.MemberDTO;
+import dev.road.map.domain.user.Provider;
+import dev.road.map.domain.user.User;
+import dev.road.map.domain.user.UserRepository;
+import dev.road.map.dto.UserDTO;
 
 // 모듈화
 @Component
-public class ParseMember {
+public class ParseUser {
 
-	Member member;
+	User member;
 	
 	@Autowired
-	MemberRepository memberRepository;
+	UserRepository memberRepository;
 	
 	// oauthid파싱
 	public String parseOauthid(Authentication auth) {
@@ -52,8 +52,8 @@ public class ParseMember {
 		return oauthid;
 	}
 	
-	// Member 파싱 
-	public MemberDTO parseMemberDTO(Authentication auth) {
+	// User 파싱 
+	public UserDTO parseMemberDTO(Authentication auth) {
 		DefaultOAuth2User authorization = (DefaultOAuth2User) auth.getPrincipal();
 
 		String oauthid = null;
@@ -68,7 +68,7 @@ public class ParseMember {
 			provider = Provider.google;
 			
 			return 
-			MemberDTO.builder()
+			UserDTO.builder()
 			.oauthid(oauthid)
 			.provider(provider)
 			.nickname(nickname)
@@ -93,7 +93,7 @@ public class ParseMember {
 			}
 			
 			return 
-			MemberDTO.builder()
+			UserDTO.builder()
 			.oauthid(oauthid)
 			.provider(provider)
 			.nickname(nickname)

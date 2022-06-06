@@ -2,7 +2,7 @@ package dev.road.map.config.security.oauth.provider;
 
 import java.util.Map;
 
-import dev.road.map.domain.member.Provider;
+import dev.road.map.domain.user.Provider;
 
 /**
  * @author Jungmin, Yang

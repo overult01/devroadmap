@@ -1,4 +1,4 @@
-package dev.road.map.domain.member;
+package dev.road.map.domain.user;
 
 public enum Provider {
 

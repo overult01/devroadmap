@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 
 import org.springframework.stereotype.Component;
 
-import dev.road.map.domain.member.Field;
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.Provider;
-import dev.road.map.domain.member.Role;
-import dev.road.map.domain.member.Type;
+import dev.road.map.domain.user.Field;
+import dev.road.map.domain.user.Provider;
+import dev.road.map.domain.user.Role;
+import dev.road.map.domain.user.Type;
+import dev.road.map.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 @Component
-public class MemberDTO {
+public class UserDTO {
 
 	private Long id;
     private String oauthid;  
@@ -36,15 +36,15 @@ public class MemberDTO {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public MemberDTO(String oauthid, Provider provider, String nickname, String email) {
+	public UserDTO(String oauthid, Provider provider, String nickname, String email) {
         this.oauthid = oauthid;
         this.provider = provider; 
         this.nickname = nickname; 
         this.email = email; 
     }  
    
-    public Member ToMember(MemberDTO memberDTO) {
-    	return Member.builder()
+    public User ToMember(UserDTO memberDTO) {
+    	return User.builder()
     	.oauthid(memberDTO.getOauthid())
     	.email(memberDTO.getEmail())
     	.nickname(memberDTO.getNickname())

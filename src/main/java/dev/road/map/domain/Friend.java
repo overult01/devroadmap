@@ -13,10 +13,12 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import dev.road.map.domain.member.Member;
+import dev.road.map.domain.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Entity
 @Getter @Setter
 public class Friend {
@@ -27,12 +29,12 @@ public class Friend {
     private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
-	private Member oauthid_f1;
+	@JoinColumn(name = "oauthid_f1", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	private User user1; 
 	
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
-	private Member oauthid_f2;
+	@JoinColumn(name = "oauthid_f2", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	private User user2;
 
 	@CreationTimestamp
 	private Timestamp frienddate;

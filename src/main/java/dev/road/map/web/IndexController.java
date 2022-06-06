@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.road.map.domain.member.Member;
-import dev.road.map.domain.member.MemberRepository;
-import dev.road.map.domain.member.Provider;
+import dev.road.map.domain.user.Provider;
+import dev.road.map.domain.user.User;
+import dev.road.map.domain.user.UserRepository;
 
 @RestController
 public class IndexController {
 
 	@Autowired
-	MemberRepository memberRepository;
+	UserRepository memberRepository;
 	
 	// http://localhost:8080/login/oauth2/code/google?state=CcTjQR04JGhL9Eyw5Bza_hWElbiYWK_iS9-EUGC9haM%3D&code=4%2F0AX4XfWhn7YnbPllfNzd4YDjKnXyj_iq3nvoZN2WrYWu-yTGATVMGzZEp2OrA6l7Y8mjxpw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent
 	// http://localhost:3000/oauth2/authorization/google
@@ -51,7 +51,7 @@ public class IndexController {
 //	
 //	@PostMapping("/join")
 //	public ResponseEntity<?> join() {
-//		Member member = Member.builder()
+//		User member = User.builder()
 //				.email(null)
 //				.nickname("test")
 //				.oauthId("test_1234")
