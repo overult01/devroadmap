@@ -1,5 +1,6 @@
 package dev.road.map.config.security;
 
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.httpBasic().disable() // 기본 로그인 방식 미사용
 		
         .oauth2Login()
-        // .loginPage("token/expire")
+        // .loginPage("to        ken/expire")
         .defaultSuccessUrl("http://localhost:3000")
         .successHandler(successHandler)
 		.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
@@ -50,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
         http
 //        .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class) // 모든 요청은 이 필터를 거친다.(CorsConfig에서 설정한 corsFilter)
-        .addFilterBefore(new JwtAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new JwtAuthFilter(tokenService), CorsFilter.class);
 		
 //		.addFilter(new JwtAuthenticationFilter(authenticationManager())) // UsernamePasswordAuthenticationFilter 재활성화
 //		.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository));

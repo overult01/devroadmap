@@ -1,27 +1,22 @@
 package dev.road.map.config.security;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import dev.road.map.domain.user.Role;
 import dev.road.map.domain.user.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class TokenService{
@@ -31,7 +26,7 @@ public class TokenService{
 	
 	// private static final Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	
-    // JWT 생성 
+    // JWT 토큰 생성 
     public String generateToken(User user) {
         
     	//Header 부분 설정
@@ -45,20 +40,21 @@ public class TokenService{
         payloads.put("Email", user.getEmail());
         payloads.put("NickName",user.getNickname());
         
-        System.out.println("secret: " + secret);
-        
         // 기한은 지금부터 1일 
         Date expireDate = Date.from(
         		Instant.now()
         		.plus(1, ChronoUnit.DAYS));
 
+        byte[] secretBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signingKey = new SecretKeySpec(secretBytes, SignatureAlgorithm.HS256.getJcaName());
+        
         // 토큰 builder
-        String jwt = Jwts.builder()
+		String jwt = Jwts.builder()
         		.setHeader(headers)
         		.setClaims(payloads)
         		.setSubject(user.getOauthid()) // 토큰용도 
         		.setExpiration(expireDate)
-        		.signWith(SignatureAlgorithm.HS256, secret)
+        		.signWith(signingKey, SignatureAlgorithm.HS256)
         		.compact(); // 토큰생성
         
         System.out.println("jwt: " + jwt);
@@ -66,12 +62,13 @@ public class TokenService{
         return jwt;
     }
 
-    // 토큰 검증
+    // JWT 토큰 검증
     public String verifyTokenAndGetOauthid(String token) {
-        // 토큰을 디코딩, 파싱한 후 토큰의 위조 여부를 확인
+        // Claims: payload에 담긴 정보 
+    	// 토큰을 디코딩, 파싱한 후 토큰의 위조 여부를 확인
     	// 이후 subject 즉 oauthid를 리턴.
     	Claims claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
                     .parseClaimsJws(token)
                     .getBody();
             return claims.getSubject();

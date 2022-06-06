@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import dev.road.map.config.security.TokenService;
 import dev.road.map.dto.UserDTO;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 
@@ -36,20 +37,26 @@ public class JwtAuthFilter extends OncePerRequestFilter{
     	// 토큰 검사. jwt이므로 인가 서버에 요청하지 않고도 검증 가능.
         if (token != null && !token.equalsIgnoreCase(token)) {
         	// oauthid가져오기. 위조된 경우 예외 처리된다.
-        	String oauthid = tokenService.verifyTokenAndGetOauthid(token);
-        	System.out.println("필터동작, 토큰존재 ");
-            // DB연동을 안했으니 이메일 정보로 유저를 만들어주겠습니다
-            UserDTO memberDTO = UserDTO.builder()
-                    .oauthid(oauthid)
-                    .provider(null) // 임시 null
-            		.nickname(null)
-            		.email(null)
-            		.build();
+        	try {
+        		String oauthid = tokenService.verifyTokenAndGetOauthid(token);
+        		System.out.println("필터동작, 토큰존재 ");
+        		// DB연동을 안했으니 이메일 정보로 유저를 만들어주겠습니다
+        		UserDTO memberDTO = UserDTO.builder()
+        				.oauthid(oauthid)
+        				.provider(null) // 임시 null
+        				.nickname(null)
+        				.email(null)
+        				.build();
 
-            //  jwt의 인증이 성공하면 SecurityContext에 해당 정보를 저장
-            // Authentication auth = getAuthentication(memberDTO);
-            Authentication auth = getAuthentication(memberDTO);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        		//  jwt의 인증이 성공하면 SecurityContext에 해당 정보를 저장
+        		// Authentication auth = getAuthentication(memberDTO);
+        		Authentication auth = getAuthentication(memberDTO);
+        		SecurityContextHolder.getContext().setAuthentication(auth);
+			} catch (IllegalArgumentException e) {
+                System.out.println("JWT Token가져오기 실패");
+			} catch (ExpiredJwtException e) {
+                System.out.println("만료된 JWT Token");
+			}
         }
 
         try {
