@@ -21,7 +21,7 @@ import lombok.Setter;
 @Component
 public class UserDTO {
 
-	private Long id;
+	private String token;
     private String oauthid;  
     private Provider provider;
     private String nickname;
@@ -36,7 +36,7 @@ public class UserDTO {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public UserDTO(String oauthid, Provider provider, String nickname, String email) {
+	public UserDTO(String token, String oauthid, Provider provider, String nickname, String email) {
         this.oauthid = oauthid;
         this.provider = provider; 
         this.nickname = nickname; 
