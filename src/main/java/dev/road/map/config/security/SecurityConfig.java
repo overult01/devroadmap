@@ -19,6 +19,8 @@ import dev.road.map.config.security.jwt.JwtAuthFilter;
 import dev.road.map.config.security.oauth.CustomOAuth2UserService;
 import dev.road.map.config.security.oauth.OAuth2SuccessHandler;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor
 @Configuration
@@ -29,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler successHandler;
     private final TokenService tokenService;
+    private final JwtAuthFilter jwtAuthFilter;
     
 	// login 페이지 변경
 	@Override
@@ -43,18 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.httpBasic().disable() // 기본 로그인 방식 미사용
 		
         .oauth2Login()
-        // .loginPage("to        ken/expire")
+        // .loginPage("token/expire")
         .defaultSuccessUrl("http://localhost:3000")
         .successHandler(successHandler)
 		.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작
 		.userService(customOAuth2UserService);
 		
+		// 매 요청마다 CorsFilter 실행후 jwtAuthFilter 실행
         http
-//        .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class) // 모든 요청은 이 필터를 거친다.(CorsConfig에서 설정한 corsFilter)
-        .addFilterBefore(new JwtAuthFilter(tokenService), CorsFilter.class);
-		
-//		.addFilter(new JwtAuthenticationFilter(authenticationManager())) // UsernamePasswordAuthenticationFilter 재활성화
-//		.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository));
+        .addFilterAfter(jwtAuthFilter, OAuth2LoginAuthenticationFilter.class);
 
 		// jwt사용시 여기까지는 기본 
 

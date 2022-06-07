@@ -71,7 +71,7 @@ public class TokenService{
                     .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
                     .parseClaimsJws(token)
                     .getBody();
-            return claims.getSubject();
+            return claims.getSubject(); // oauthid
     }
 
 }
