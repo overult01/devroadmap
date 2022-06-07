@@ -7,11 +7,8 @@ import lombok.Getter;
 @Getter
 public class SessionUser {
 
-//    private Long id;
-    private String oauthid;    
-    private Provider provider;
+	private String email;
     private String nickname;
-    private String email;
     private Type type;
     private Field field;
     private String profile;
@@ -21,9 +18,6 @@ public class SessionUser {
     private Role role;
     
 	public SessionUser(User member) {
-//		this.id = member.getId();
-		this.oauthid = member.getOauthid();
-		this.provider = member.getProvider();
 		this.nickname = member.getNickname();
 		this.email = member.getEmail();
 		this.type = member.getType();

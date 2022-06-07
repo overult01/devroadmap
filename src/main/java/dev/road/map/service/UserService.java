@@ -10,7 +10,11 @@ import dev.road.map.domain.user.UserRepository;
 public class UserService {
 
 	@Autowired
-	private UserRepository memberRepository;
+	private UserRepository userRepository;
 	
-	public void save(final User member) {}
+	public void save(final User user) {};
+	
+	public User getByCredential(final String email, final String password) {
+		return userRepository.findByEmailAndPassword(email, password);
+	}
 }

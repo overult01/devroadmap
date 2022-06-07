@@ -29,11 +29,11 @@ public class Guestbook {
     private Long id;
     
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid_me", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	@JoinColumn(name = "email_me", insertable=false, updatable=false) // email 컬럼이 pk, fk 관계 
     private User user1;
 	
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid_you", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	@JoinColumn(name = "email_you", insertable=false, updatable=false) // email 컬럼이 pk, fk 관계 
     private User user2;
 	
     private String message;

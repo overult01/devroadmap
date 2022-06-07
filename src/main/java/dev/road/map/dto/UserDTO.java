@@ -21,34 +21,24 @@ import lombok.Setter;
 @Component
 public class UserDTO {
 
-	private String token;
-    private String oauthid;  
-    private Provider provider;
-    private String nickname;
+    private String password;
     private String email;
-    private Type type;
-    private Field field;
-	private Timestamp joindate;
-    private String profile;
-    private Boolean unmatching;
-    private String pin;
-    private Role role;
+//    private String nickname;
+//    private Type type;
+//    private Field field;
     
     // 필수값만 있는 생성자 (가입시)
-    @Builder
-	public UserDTO(String token, String oauthid, Provider provider, String nickname, String email) {
-        this.oauthid = oauthid;
-        this.provider = provider; 
-        this.nickname = nickname; 
-        this.email = email; 
-    }  
-   
-    public User ToMember(UserDTO memberDTO) {
+//    @Builder
+//	public UserDTO(String userid, String nickname, String email) {
+//        this.userid = userid;
+//        this.nickname = nickname; 
+//        this.email = email; 
+//    }  
+//   
+    public User ToUser(UserDTO userDTO) {
     	return User.builder()
-    	.oauthid(memberDTO.getOauthid())
-    	.email(memberDTO.getEmail())
-    	.nickname(memberDTO.getNickname())
-    	.provider(memberDTO.getProvider())
+//    	.nickname(userDTO.getNickname())
+    	.email(userDTO.getEmail())
     	.build();
     }
 }

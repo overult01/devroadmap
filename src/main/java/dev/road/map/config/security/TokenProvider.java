@@ -19,12 +19,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
-public class TokenService{
+public class TokenProvider{
 
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리 
-	
-	// private static final Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	
     // JWT 토큰 생성 
     public String generateToken(User user) {
@@ -36,9 +34,8 @@ public class TokenService{
 
         //payload 부분 설정
         Map<String, Object> payloads = new HashMap<>();
-        payloads.put("Oauthid", user.getOauthid());
         payloads.put("Email", user.getEmail());
-        payloads.put("NickName",user.getNickname());
+        payloads.put("Nickname", user.getNickname());
         
         // 기한은 지금부터 1일 
         Date expireDate = Date.from(
@@ -52,7 +49,7 @@ public class TokenService{
 		String jwt = Jwts.builder()
         		.setHeader(headers)
         		.setClaims(payloads)
-        		.setSubject(user.getOauthid()) // 토큰용도 
+        		.setSubject(user.getEmail()) // 토큰용도 
         		.setExpiration(expireDate)
         		.signWith(signingKey, SignatureAlgorithm.HS256)
         		.compact(); // 토큰생성
@@ -66,12 +63,12 @@ public class TokenService{
     public String verifyTokenAndGetOauthid(String token) {
         // Claims: payload에 담긴 정보 
     	// 토큰을 디코딩, 파싱한 후 토큰의 위조 여부를 확인
-    	// 이후 subject 즉 oauthid를 리턴.
+    	// 이후 subject 즉 userid를 리턴.
     	Claims claims = Jwts.parser()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
                     .parseClaimsJws(token)
                     .getBody();
-            return claims.getSubject(); // oauthid
+            return claims.getSubject(); // userid
     }
 
 }
