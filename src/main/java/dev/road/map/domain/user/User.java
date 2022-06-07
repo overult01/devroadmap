@@ -1,6 +1,8 @@
 package dev.road.map.domain.user;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
 
 import dev.road.map.dto.UserDTO;
 import lombok.Builder;
@@ -53,7 +56,6 @@ public class User {
     private String pin;
     
     @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
     private Role role;
     
     // 필수값만 있는 생성자 (가입시)
@@ -66,4 +68,17 @@ public class User {
 	public String getRoleString() {
 		return this.role.toString();
 	}
+	
+    
+    public UserDTO ToUserDTO(User user) {
+    	return UserDTO.builder()
+//    		.nickname(user.getEmail())
+    		.role(Role.USER) // 임시 (어떻게 user에서 넣을지 고민)
+    		.password(user.getPassword())
+	    	.email(user.getEmail())
+	    	.build();
+    }
+
+	public User(String subject, String string, Collection<? extends GrantedAuthority> authorities) {
+	}    
 }

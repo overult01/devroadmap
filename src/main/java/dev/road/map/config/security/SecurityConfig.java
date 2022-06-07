@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -12,8 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import dev.road.map.config.CorsConfig;
+import dev.road.map.config.security.jwt.JwtAuthorizationFilter;
+import dev.road.map.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -22,8 +26,9 @@ import lombok.AllArgsConstructor;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // secured 어노테이션 활성화, preAuthorize 어노테이션 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final TokenProvider tokenService;
-
+    private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
+    
     @Autowired
 	private CorsConfig corsConfig;
 
@@ -36,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.addFilter(corsConfig.corsFilter());
+//		.addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
 		http.csrf().disable()
 				.exceptionHandling().accessDeniedPage("/err/denied-page"); // 접근 불가 페이지
@@ -51,10 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        .defaultSuccessUrl("http://localhost:3000/login/result");
 		// jwt사용시 여기까지는 기본 
 
-		http.authorizeRequests().antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/login/**", "/static/**", "/logout/**").permitAll()
-				.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')") // 로그인한 admin만 접근 가능
-				.antMatchers("/mail**").permitAll()
-				.anyRequest().authenticated();
+//		http.authorizeRequests().antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/login/**", "/static/**", "/logout/**").permitAll()
+//				.antMatchers("/user/**").access("hasRole('ROLE_USER')") // 로그인한 user만 접근 가능
+//				.antMatchers("/mail**").permitAll()
+//				.anyRequest().authenticated();
 
 		http.logout().logoutSuccessUrl("/");
 
@@ -66,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //				.maximumSessions(1) // 중복 로그인 방지
 //				.maxSessionsPreventsLogin(false);
 //
-//		http.sessionManagement().sessionFixation().migrateSession(); // 인증이 됐을 때 새로운 세션을 생성한뒤, 기존 세션의 attribute들을 복사
+		http.sessionManagement().sessionFixation().migrateSession(); // 인증이 됐을 때 새로운 세션을 생성한뒤, 기존 세션의 attribute들을 복사
 	}
 
 	// 정적 파일 열기
@@ -75,12 +81,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/favicon.ico", "/static/**", "/error", "/lib/**").mvcMatchers("/static/**")
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 	}
-
-//	// 세션 변경
-//	@Bean
-//	@Override
-//	public AuthenticationManager authenticationManagerBean() throws Exception {
-//		return super.authenticationManagerBean();
-//	}
 
 }

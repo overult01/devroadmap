@@ -15,29 +15,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 @Component
-public class UserDTO {
+public class LoginDTO {
 
     private String password;
     private String email;
-    private String nickname;
-    private Role role;
-//    private Type type;
-//    private Field field;
-    
-
-//   
-    public User ToUser(UserDTO userDTO) {
-    	return User.builder()
-	    	.email(userDTO.getEmail())
-	    	.build();
-    }
-
-	public String getRoleString() {
-		return this.role.toString();
-	}    
 }

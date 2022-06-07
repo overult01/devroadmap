@@ -6,45 +6,41 @@ import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import dev.road.map.domain.user.User;
+import dev.road.map.domain.user.UserRepository;
+import dev.road.map.dto.UserDTO;
 import lombok.Data;
 
 // 시큐리티가 /login 주소요청이 오면 낚아채서 로그인을 진행시킨다.
 // 로그인 진행이 되면 시큐리티 session을 만들어준다.(시큐리티 자체적인 세션. key값은 Security ContextHolder)
 // 시큐리티 session에 들어갈 수 있는 오브젝트(정해져있음): Authentication 타입의 객체
-// Authentication안에 User정보가 있어야 한다.
-// User 오브젝트 타입(정해져있음) : UserDetails 타입 객체
+// Authentication안에 UserDTO정보가 있어야 한다.
+// UserDTO 오브젝트 타입(정해져있음) : UserDTODetails 타입 객체
 
-// Security Session에 들어가는 객체 Authentication. 이에 들어가는 UserDetails 객체
+// Security Session에 들어가는 객체 Authentication. 이에 들어가는 UserDTODetails 객체
 
 @Data
-public class PrincipalDetails implements UserDetails, OAuth2User{ // PrincipalDetails가 두 타입을 묶어줄 수 있도록.(시큐리티 세션에 넣기위해)
+public class PrincipalDetails implements UserDetails{ // PrincipalDetails가 두 타입을 묶어줄 수 있도록.(시큐리티 세션에 넣기위해)
 
-	private User user; // 콤포지션
+	private UserDTO userDTO; // 콤포지션
 	private Map<String, Object> attributes;
+	private User user;
+	private UserRepository userRepository;
 	
 	// 생성자(일반 로그인)
-	public PrincipalDetails(User user) {
-		this.user = user;
-	}
-
-	// 생성자(OAuth 로그인): attributes 객체를 통해서 User객체를 생성
-	public PrincipalDetails(User user, Map<String, Object> attributes) {
-		super();
-		this.user = user;
-		this.attributes = attributes;
+	public PrincipalDetails(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 	
-	// 해당 User의 권한을 리턴
+	// 해당 UserDTO의 권한을 리턴
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> collect = new ArrayList<>();
 		collect.add(new GrantedAuthority() {
 			@Override
 			public String getAuthority() {
-				return user.getRoleString();
+				return userDTO.getRoleString();
 			}
 		});
 		return collect;
@@ -52,18 +48,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User{ // PrincipalDe
 
 	@Override
 	public String getPassword() {
-		return user.getPassword();
-	}
-
-	@Override
-	public String getName() {
-		return user.getEmail(); // 이메일을 아이디로 사용
+		return userDTO.getPassword();
 	}
 
 	
 	@Override
 	public String getUsername() {
-		return user.getNickname();
+		return userDTO.getNickname();
 	}
 
 	// 계정 만료 여부 
