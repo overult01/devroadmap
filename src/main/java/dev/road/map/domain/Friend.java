@@ -29,11 +29,11 @@ public class Friend {
     private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid_f1", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	@JoinColumn(name = "userid_f1", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
 	private User user1; 
 	
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "oauthid_f2", insertable=false, updatable=false) // oauthid 컬럼이 pk, fk 관계 
+	@JoinColumn(name = "userid_f2", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
 	private User user2;
 
 	@CreationTimestamp

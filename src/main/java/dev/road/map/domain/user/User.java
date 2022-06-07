@@ -23,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Getter @Setter
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "oauthid")})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class User {
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,17 +31,13 @@ public class User {
 //    private Long id;
     
     @Id
-    @Column(length = 150, name = "oauthid", nullable = false)
-    private String oauthid;  
+    @Column(length = 150, name = "email", nullable = false)
+    private String email; // 이메일을 아이디로 사용 
     
-    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-    private Provider provider;
+    private String password;
     
 //    @Column(nullable = false)
     private String nickname;
-    
-    private String email;
     
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -62,9 +58,7 @@ public class User {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public User(String oauthid, Provider provider, String nickname, String email) {
-        this.oauthid = oauthid;
-        this.provider = provider; 
+	public User(String nickname, String email) {
         this.nickname = nickname; 
         this.email = email; 
     }
