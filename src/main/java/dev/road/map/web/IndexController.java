@@ -43,8 +43,8 @@ public class IndexController {
     public ResponseEntity<?> authenticate(HttpServletRequest request, LoginDTO loginDTO) {
 
     	try {
-	    	String email = request.getParameter("email");
-	    	String password = request.getParameter("password");
+	    	String email = request.getHeader("userEmail");
+	    	String password = request.getHeader("userPassword");
 	    	
 	    	System.out.println("email: " + email);
 	    	System.out.println("password: " + password);
