@@ -28,6 +28,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
+	// 입력받은 email로 유저 찾기-> matches메서드로 입력받은 password와 암호화된 password가 같은지 확인 
 	public User getByCredential(final String email, final String password, final PasswordEncoder passwordEncoder) {
 		final User originalUser = userRepository.findByEmail(email);
 		
