@@ -1,34 +1,23 @@
 package dev.road.map.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.road.map.config.security.PrincipalDetails;
 import dev.road.map.config.security.TokenProvider;
 import dev.road.map.domain.user.Role;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 import dev.road.map.dto.LoginDTO;
-import dev.road.map.dto.UserDTO;
 import dev.road.map.service.UserService;
 
 @RestController
@@ -43,13 +32,11 @@ public class IndexController {
 	@Autowired
 	TokenProvider tokenprovider;
 	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
-	
-    @RequestMapping("jwt/create")
-    public String jwtcreate(Authentication auth) {
-    	return null;
-    }
     
     @RequestMapping("/signup")
     public ResponseEntity<?> authenticate(HttpServletRequest request, LoginDTO loginDTO) {
@@ -82,11 +69,7 @@ public class IndexController {
     
     @RequestMapping("/signin")
     public ResponseEntity<?> signin(Authentication authentication, HttpServletRequest request) {
-//    	String email = request.getParameter("email");
-//    	String password = request.getParameter("password");    	
-//    	// 아직 비밀번호 암호화 전 
-//    	User user = userService.getByCredential(email, password);
-    	
+		SecurityContextHolder.getContext().setAuthentication(authentication);
     	// 요청에서 토큰 가져오기 
     	String bearerToken = request.getHeader("Authorization");
     	String token = null;
