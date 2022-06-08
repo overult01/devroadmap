@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,42 +34,45 @@ public class IndexController {
 	TokenProvider tokenprovider;
 	
 	@Autowired
-	AuthenticationManager authenticationManager;
+	PasswordEncoder passwordEncoder;
 	
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
     
     @RequestMapping("/signup")
     public ResponseEntity<?> authenticate(HttpServletRequest request, LoginDTO loginDTO) {
-    	String email = request.getParameter("email");
-    	String password = request.getParameter("password");
-    	
-    	System.out.println("email: " + email);
-    	
-    	// 유저 아이디가 있는지 확인 
-    	if (userRepository.findByEmail(email) != null) {
-			return ResponseEntity.badRequest().body("used email");
+
+    	try {
+	    	String email = request.getParameter("email");
+	    	String password = request.getParameter("password");
+	    	
+	    	System.out.println("email: " + email);
+	    	
+	    	// DB 저장
+	    	User user = User.builder()
+	    			.password(passwordEncoder.encode(password)) // 비밀번호 암호화
+	    			.field(null) // 임시 
+	    			.type(null) // 임시
+	    			.email(email)
+	    			.nickname(null) // 임시
+	    			.role(Role.USER)
+	    			.build();
+	    	
+	    	// 서비스를 이용해 리포지터리에 사용자 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
+	    	User signupUser = userService.create(user);
+	    	return ResponseEntity.ok().body("signup complete");
+		} catch (Exception e) {
+	    	return ResponseEntity.badRequest().body(e);
 		}
-    	// DB 저장
-    	User user = User.builder()
-	    	.email(email)
-	    	.nickname(null)
-	    	.build();
-    	
-    	// 회원가입 완료 회원(추후 이메일 인증 회원만 User권한 부여 예정)
-    	user.setRole(Role.USER);
-    	
-    	userRepository.save(user);
-    	
+    }
+    
+    @RequestMapping("/signin")
+    public ResponseEntity<?> signin(Authentication authentication, HttpServletRequest request) {
     	// 토큰 생성
     	String token = tokenprovider.generateToken(user);
     	return ResponseEntity.ok()
     			.header("jwtToken", token)
     			.body("com");
-    }
-    
-    @RequestMapping("/signin")
-    public ResponseEntity<?> signin(Authentication authentication, HttpServletRequest request) {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
     	// 요청에서 토큰 가져오기 
     	String bearerToken = request.getHeader("Authorization");

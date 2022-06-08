@@ -18,11 +18,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 
 import dev.road.map.dto.UserDTO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter @Setter
@@ -58,6 +61,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     
+    private Boolean isdelete;
+    
     // 필수값만 있는 생성자 (가입시)
     @Builder
 	public User(String nickname, String email) {
@@ -73,7 +78,7 @@ public class User {
     public UserDTO ToUserDTO(User user) {
     	return UserDTO.builder()
 //    		.nickname(user.getEmail())
-    		.role(Role.USER) // 임시 (어떻게 user에서 넣을지 고민)
+    		.role(Role.USER)
     		.password(user.getPassword())
 	    	.email(user.getEmail())
 	    	.build();
