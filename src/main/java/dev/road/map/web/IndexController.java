@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +38,7 @@ public class IndexController {
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
     
+//	@CrossOrigin(origins = "http://localhost:3000/login", maxAge = 3600)
     @RequestMapping("/signup")
     public ResponseEntity<?> authenticate(HttpServletRequest request, LoginDTO loginDTO) {
 
@@ -64,7 +66,8 @@ public class IndexController {
 	    	return ResponseEntity.badRequest().body(e);
 		}
     }
-    
+	
+//	@CrossOrigin(origins = "http://localhost:3000/login", maxAge = 3600)
     @RequestMapping("/signin")
     public ResponseEntity<?> signin(HttpServletRequest request) {
     	
@@ -88,27 +91,28 @@ public class IndexController {
     }
 
     // 토큰 검증
-	  @RequestMapping("/token/verify")
-	  public ResponseEntity<?> user(Authentication authentication,HttpServletRequest request) {
+//	@CrossOrigin(origins = "http://localhost:3000/login", maxAge = 3600)
+	@RequestMapping("/token/verify")
+	public ResponseEntity<?> user(Authentication authentication,HttpServletRequest request) {
 		  
-		  // 요청에서 토큰 가져오기 
-		  String bearerToken = request.getHeader("Authorization");
-		  String token = null;
-		  if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			  token = bearerToken.substring(7);
-			  System.out.println("token: " + token);
-		  }
-		  String email;
+		// 요청에서 토큰 가져오기 
+		String bearerToken = request.getHeader("Authorization");
+		String token = null;
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			token = bearerToken.substring(7);
+			System.out.println("token: " + token);
+		}
+		String email;
 		  
-		  if (token!=null) { // 정상인 경우
+		if (token!=null) { // 정상인 경우
 			  
-			  try {
+			try {
 				  // 토큰이 위조된 경우 예외 발생 
-				  email = tokenprovider.verifyTokenAndGetOauthid(token);
+				email = tokenprovider.verifyTokenAndGetOauthid(token);
 				  
-				  User user = userRepository.findByEmail(email);
+				User user = userRepository.findByEmail(email);
 				  
-				  SecurityContextHolder.getContext().setAuthentication(authentication);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
 //			// 세션 수정(권한 관리)
 //			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 //			authorities.add(new SimpleGrantedAuthority(user.getRoleString()));
