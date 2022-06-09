@@ -86,8 +86,8 @@ public class IndexController {
     		// 토큰 생성
     		String token = tokenprovider.generateToken(user);
     		return ResponseEntity.ok()
-    				.header("jwtToken", token)
-    				.body("com");
+    				.header("jwtToken")
+    				.body(token);
 		}
     	else { // 해당 user가 없거나, matches 로 확인한 비번이 틀리면
 	    	return ResponseEntity.badRequest().body("login failed");
