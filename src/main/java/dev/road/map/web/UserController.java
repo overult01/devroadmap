@@ -19,15 +19,16 @@ public class UserController {
 	UserRepository userRepository;
 	
 	@Autowired
-	ParseUser parseUser;
-	
-	@Autowired
 	UserService userService;
+
+	@Autowired
+	ParseUser parseUser;
 	
 	// 닉네임 중복확인(비동기)
     @RequestMapping("/edit/nickname/check")
     public String nicknamecheck(HttpServletRequest request, String nickname){
     	String email = parseUser.parseEmail(request);
+    	// 현재 로그인한 유저 
     	User user = userRepository.findByEmail(email);
     	String existNick = user.getNickname();
     	
@@ -38,18 +39,25 @@ public class UserController {
 		return "fail";  
     }
     
+    // 회원 정보 수정
     @RequestMapping("/edit/userdetatils")
-    public ResponseEntity<String> edit(HttpServletRequest request, String nickname){
-    	String email = parseUser.parseEmail(request);
-    	// 현재 로그인한 유저 
-    	User user = userRepository.findByEmail(email);
-    	
+    public ResponseEntity<String> edit(HttpServletRequest request){
     	// 닉네임(중복확인 먼저 해야 수정 가능. 프론트단에서 확인)
-    	if (userService.edit(request, user) != null) {
+    	if (userService.edit(request) != null) {
     		return ResponseEntity.ok().body("edit success");
 		};
     	
 		return ResponseEntity.badRequest().body("edit failed");
+    }
+    
+    // 회원 탈퇴
+    @RequestMapping("/edit/withdraw")
+    public ResponseEntity<String> withdraw(HttpServletRequest request){
+    	if (userService.withdraw(request)) {
+    		return ResponseEntity.ok().body("withdraw success");			
+		}
+    	
+		return ResponseEntity.badRequest().body("withdraw failed");
     }
     
 }
