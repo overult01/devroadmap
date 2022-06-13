@@ -13,7 +13,6 @@ public class SessionUser {
     private Field field;
     private String profile;
     private Boolean unmatching;
-    private String pin;
     private Timestamp joindate;
     private Role role;
     
@@ -24,7 +23,6 @@ public class SessionUser {
 		this.field = member.getField();
 		this.profile = member.getProfile();
 		this.unmatching = member.getUnmatching();
-		this.pin = member.getPin();
 		this.joindate = member.getJoindate();
 		this.role = member.getRole();
 	}

@@ -37,7 +37,7 @@ public class User {
 //    private Long id;
     
     @Id
-    @Column(length = 150, name = "email", nullable = false)
+    @Column(length = 120, name = "email", nullable = false)
     private String email; // 이메일을 아이디로 사용 
     
     private String password;
@@ -56,7 +56,6 @@ public class User {
 
     private String profile;
     private Boolean unmatching;
-    private String pin;
     
     @Enumerated(EnumType.STRING)
     private Role role;

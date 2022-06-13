@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-	// 회원가입 미완료, 자진 탈퇴 
-	GUEST("ROLE_GUEST", "회원가입 미완 회원"),
+	MAIL("ROLE_MAIL", "이메일 인증회원"),
 	
 	// 회원가입 완료 회원 
-	USER("ROLE_USER","회원"),;
+	USER("ROLE_USER","회원가입 완료 회원"),;
 
     private final String key;
     private final String title;
