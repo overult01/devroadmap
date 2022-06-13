@@ -6,13 +6,10 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import com.nimbusds.oauth2.sdk.auth.verifier.Context;
 
 @Service
 public class MailService {     
@@ -22,7 +19,7 @@ public class MailService {
 
 	String senderMail = "devroadmap0701@gmail.com";
 	
-	@Value("domain")
+	@Value("${domain}")
 	String domain;
 
 	// 인증 메일 발송 
