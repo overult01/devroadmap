@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.road.map.commons.ParseUser;
+import dev.road.map.domain.Friend;
 import dev.road.map.domain.FriendRepository;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
@@ -34,15 +35,27 @@ public class FriendController {
 	}
 
 	// 다른 정원 둘러보기 리스트(랜덤 매칭)
-	public ResponseEntity<String> matchList(HttpServletRequest request){
-		
-		return ResponseEntity.ok().body("proposal success");
-
-	}
+//	public ResponseEntity<String> matchList(HttpServletRequest request){
+//		
+//		return ResponseEntity.ok().body("proposal success");
+//
+//	}
 
 	// 설정 
 	// 친구 신청
 	public ResponseEntity<String> proposal(HttpServletRequest request){
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+		
+		// 친구 신청할 유저 
+		String email2 = request.getParameter("proposalTo");
+		User user2 = userRepository.findByEmail(email2);
+		
+		Friend.builder()
+			.user1(user)
+			.user2(user2)
+			.build();
 		
 		return ResponseEntity.ok().body("proposal success");
 
