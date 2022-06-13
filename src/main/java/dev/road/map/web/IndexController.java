@@ -146,7 +146,7 @@ public class IndexController {
 
     // 토큰 검증
 	@RequestMapping("/token/verify")
-	public ResponseEntity<String> user(Authentication authentication,HttpServletRequest request) {
+	public ResponseEntity<String> user(Authentication authentication, HttpServletRequest request) {
 		  
 		// 요청에서 토큰 가져오기 
 		String bearerToken = request.getHeader("Authorization");
@@ -161,10 +161,9 @@ public class IndexController {
 			  
 			try {
 				  // 토큰이 위조된 경우 예외 발생 
-				email = tokenprovider.verifyTokenAndGetOauthid(token);
+				email = tokenprovider.verifyTokenAndGetUserEmail(token);
 				  
 				User user = userRepository.findByEmail(email);
-				  
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 //			// 세션 수정(권한 관리)
 //			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

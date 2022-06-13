@@ -73,7 +73,7 @@ public class TokenProvider{
         return jwt;
     }
     
-//    // 토큰 내 권한 리턴
+    // 토큰 내 권한 리턴
     public Authentication getAuthentication(String token) {
     	Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
@@ -91,7 +91,7 @@ public class TokenProvider{
     }
 
     // JWT 토큰 검증
-    public String verifyTokenAndGetOauthid(String token) {
+    public String verifyTokenAndGetUserEmail(String token) {
         // Claims: payload에 담긴 정보 
     	// 토큰을 디코딩, 파싱한 후 토큰의 위조 여부를 확인
     	// 이후 subject 즉 userid를 리턴.
