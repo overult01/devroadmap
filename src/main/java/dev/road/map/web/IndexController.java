@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.road.map.config.security.TokenProvider;
@@ -119,7 +118,6 @@ public class IndexController {
 			}
     }
     
-	@ResponseBody
     @RequestMapping("/signin")
     public ResponseEntity<String> signin(HttpServletRequest request) {
     	
@@ -148,7 +146,6 @@ public class IndexController {
     }
 
     // 토큰 검증
-	@ResponseBody
 	@RequestMapping("/token/verify")
 	public ResponseEntity<String> user(Authentication authentication,HttpServletRequest request) {
 		  
