@@ -47,7 +47,6 @@ public class IndexController {
     private String secret; // 숨김처리	
     
 	// 이메일 인증
-	@ResponseBody
     @RequestMapping("/signup/mail")
     public ResponseEntity<String> signupMail(String email, HttpServletRequest request) {
 
@@ -74,9 +73,9 @@ public class IndexController {
     }
 
     // 인증 확인(사용자가 클릭) 
-	@ResponseBody
-    @RequestMapping("/signup/mail/confirm?email={email}&authKey={authKey}")
-    public ResponseEntity<String> comfirmMail(@PathVariable("email") String email, @PathVariable("authKey") String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
+    @RequestMapping("/signup/mail/confirm")
+    public ResponseEntity<String> comfirmMail(String email, String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		System.out.println("인증중");
 		// DB 저장
 		User user = new User();
 		user.setEmail(email);
@@ -91,16 +90,15 @@ public class IndexController {
     }
     
 	// 가입
-	@ResponseBody
     @RequestMapping("/signup")
     public ResponseEntity<String> authenticate(HttpServletResponse response, HttpServletRequest request, LoginDTO loginDTO) {
-
     	try {
 	    	String email = request.getParameter("email");
 	    	String password = request.getParameter("password");
 	    	User user = userRepository.findByEmail(email);
-	    	// 이메일 인증	완료 회원(user)
+	    	// 이메일 인증	완료 회원(mail)
 			if (user.getRole() == Role.MAIL) { // 인증 성공해야지 회원가입 가능
+				System.out.println("회원가입 중");
 				// DB 저장
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
@@ -108,8 +106,7 @@ public class IndexController {
 				user.setType(null);
 				user.setNickname(null);
 				
-				// 서비스를 이용해 리포지터리에 사용자 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
-				User signupUser = userService.create(user);
+				userRepository.save(user);
 				response.sendRedirect("/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
@@ -125,7 +122,7 @@ public class IndexController {
     
 	@ResponseBody
     @RequestMapping("/signin")
-    public ResponseEntity<String> signin(HttpServletRequest request) {
+    public ResponseEntity<String> signin(HttpServletRequest request, LoginDTO loginDTO) {
     	
     	System.out.println("로그인중");
     	
