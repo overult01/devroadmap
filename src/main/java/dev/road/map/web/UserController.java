@@ -4,13 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.road.map.commons.ParseUser;
-import dev.road.map.config.security.TokenProvider;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 import dev.road.map.service.UserService;
