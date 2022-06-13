@@ -28,10 +28,12 @@ public class Friend {
     @Column(nullable = false)
     private Long id;
 
+    // 본인신청(친구로 신청한 회원) 
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
 	@JoinColumn(name = "userid_f1", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
 	private User user1; 
 	
+	// 본인 수락(친구 신청을 받은 회원)
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
 	@JoinColumn(name = "userid_f2", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
 	private User user2;
