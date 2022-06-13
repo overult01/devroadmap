@@ -1,9 +1,13 @@
 package dev.road.map.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dev.road.map.domain.user.Field;
+import dev.road.map.domain.user.Type;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 
@@ -39,5 +43,48 @@ public class UserService {
 			
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unlikely-arg-type")
+	public User edit(HttpServletRequest request, User user) {
+		String password = request.getParameter("password").trim();
+		String profile = request.getParameter("profile").trim();
+		String typeStr = request.getParameter("type").trim();
+		String fieldStr = request.getParameter("field").trim();
+		
+		// 수정 정보가 있을 때만 반영 
+		if (!password.isEmpty()) {
+			user.setPassword(password);
+		}
+		if (!profile.isEmpty()) {
+			user.setProfile(profile);
+		}		
+		if (!typeStr.isEmpty()) {
+			Type type;
+			if (Type.hours2.equals(typeStr)) {
+				type = Type.hours2;
+			}
+			else if (Type.hours4.equals(typeStr)) {
+				type = Type.hours4;
+			}
+			else {
+				type = Type.hours8;				
+			}
+			user.setType(type);
+		}
+		if (!fieldStr.isEmpty()) {
+			Field field;
+			if (Field.back.equals(fieldStr)) {
+				field = Field.back;
+			}
+			else {
+				field = Field.front;
+			}
+			user.setField(field);
+		}
+		// 변경된 유저 정보 저장
+		userRepository.save(user);
+		return user;
+		
 	}
 }

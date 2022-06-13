@@ -13,6 +13,7 @@ import dev.road.map.commons.ParseUser;
 import dev.road.map.config.security.TokenProvider;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
+import dev.road.map.service.UserService;
 
 @RestController
 public class UserController {
@@ -22,6 +23,9 @@ public class UserController {
 	
 	@Autowired
 	ParseUser parseUser;
+	
+	@Autowired
+	UserService userService;
 	
 	// 닉네임 중복확인(비동기)
     @RequestMapping("/edit/nickname/check")
@@ -40,9 +44,15 @@ public class UserController {
     @RequestMapping("/edit/userdetatils")
     public ResponseEntity<String> edit(HttpServletRequest request, String nickname){
     	String email = parseUser.parseEmail(request);
-
-		return null;
+    	// 현재 로그인한 유저 
+    	User user = userRepository.findByEmail(email);
     	
+    	// 닉네임(중복확인 먼저 해야 수정 가능. 프론트단에서 확인)
+    	if (userService.edit(request, user) != null) {
+    		return ResponseEntity.ok().body("edit success");
+		};
+    	
+		return ResponseEntity.badRequest().body("edit failed");
     }
     
 }
