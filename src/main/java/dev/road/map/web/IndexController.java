@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -122,7 +121,7 @@ public class IndexController {
     
 	@ResponseBody
     @RequestMapping("/signin")
-    public ResponseEntity<String> signin(HttpServletRequest request, LoginDTO loginDTO) {
+    public ResponseEntity<String> signin(HttpServletRequest request) {
     	
     	System.out.println("로그인중");
     	
@@ -190,30 +189,7 @@ public class IndexController {
     			String err = e.toString();
 				return ResponseEntity.badRequest().body(err);
 		  }
-		  // return ResponseEntity.badRequest().body("error");
 	  }
 		return ResponseEntity.badRequest().body("error");
 	}
 }	
-// 권한관리(보류)
-//    @RequestMapping("/user")
-//    public ResponseEntity<?> user(HttpServletRequest request) {
-//    	// 요청에서 토큰 가져오기 
-//    	String bearerToken = request.getHeader("Authorization");
-//    	String token = null;
-//    	if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-//			token = bearerToken.substring(7);
-//			System.out.println("token: " + token);
-//		}
-//    	
-//    	if (token!=null) { // 정상인 경우
-//    		// 토큰이 위조된 경우 예외 발생 
-//    		String role = tokenprovider.verifyTokenAndGetRole(token);
-//    		System.out.println(role);
-//    		if (role.equals("USER")) {
-//    			return ResponseEntity.ok().body("user");
-//			}
-//    	}
-//		return ResponseEntity.badRequest().body("error");
-//    }
-

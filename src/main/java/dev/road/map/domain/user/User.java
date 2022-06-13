@@ -77,7 +77,6 @@ public class User {
 		return this.role.toString();
 	}
 	
-    
     public UserDTO ToUserDTO(User user) {
     	return UserDTO.builder()
 //    		.nickname(user.getEmail())
