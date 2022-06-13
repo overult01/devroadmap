@@ -53,7 +53,7 @@ public class IndexController {
     			// 이메일 인증
     			String authKey = mailService.SignupAuthMail(email);
     			if (authKey != null) { // 이메일 발송 성공
-    				return ResponseEntity.ok().body("send mail");
+    				return ResponseEntity.ok().header("email", email).body("send mail");
     			}
     			else { // 이메일 발송 실패하면 에러 발생
     				throw new RuntimeException(); 
@@ -67,7 +67,6 @@ public class IndexController {
     	else {
 			return ResponseEntity.badRequest().body("sending mail is fail");
 		}
-
     }
 
     // 인증 확인(사용자가 클릭) 
@@ -82,8 +81,8 @@ public class IndexController {
 		// 서비스를 이용해 리포지터리에 사용자 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
 		userService.create(user);
 		// 회원가입 페이지로 리디이렉트
-		String redirect_uri="/signup";
-		response.sendRedirect(redirect_uri);
+//		String redirect_uri="/signup";
+//		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok().body("signup2");
     }
     
@@ -105,7 +104,7 @@ public class IndexController {
 				user.setNickname(null);
 				
 				userRepository.save(user);
-				response.sendRedirect("/signin");
+//				response.sendRedirect("/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
