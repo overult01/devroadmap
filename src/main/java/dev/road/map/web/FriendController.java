@@ -52,18 +52,19 @@ public class FriendController {
 		String email2 = request.getParameter("proposalTo");
 		User user2 = userRepository.findByEmail(email2);
 		
-		Friend.builder()
+		Friend friend = Friend.builder()
 			.user1(user)
 			.user2(user2)
 			.build();
 		
+		friendRepository.save(friend);
 		return ResponseEntity.ok().body("proposal success");
 
 	}
 
 	// 받은 친구 신청 수락/거절 
 	public ResponseEntity<String> acceptOrNot(HttpServletRequest request){
-		
+		//
 		return ResponseEntity.ok().body("proposal success");
 
 	}
