@@ -111,7 +111,6 @@ public class IndexController {
 	    	String profile = request.getParameter("profile");
 	    	String nickname = request.getParameter("nickname");	    	
 	    	String fieldStr = request.getParameter("field");
-	    	Field field;
 	    	
 	    	User user = userRepository.findByEmail(email);
 	    	// 이메일 인증	완료 회원(mail)
@@ -121,6 +120,7 @@ public class IndexController {
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
 				user.setNickname(nickname);
+				user.setProfile(profile);
 				if (fieldStr.equals(Field.front)) {
 					user.setField(Field.front);
 				}
