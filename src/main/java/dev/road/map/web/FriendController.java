@@ -1,6 +1,5 @@
 package dev.road.map.web;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import dev.road.map.commons.ParseUser;
 import dev.road.map.domain.Friend;
 import dev.road.map.domain.FriendRepository;
 import dev.road.map.domain.user.Field;
-import dev.road.map.domain.user.Type;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 
@@ -121,8 +119,20 @@ public class FriendController {
 	
 	// 다른 정원 둘러보기 on/off
 	public ResponseEntity<String> matchOrNot(HttpServletRequest request){
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
 		
-		return ResponseEntity.ok().body("proposal success");
+		if (user.getUnmatching().booleanValue()==true) {
+			user.setUnmatching(false);			
+		}
+		else if (user.getUnmatching().booleanValue()==false) {
+			user.setUnmatching(true);			
+		}
+		
+		// 변경사항 저장		
+		userRepository.save(user);
+		return ResponseEntity.ok().body("matchOrNot success");
 
 	}
 

@@ -41,7 +41,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 	// 다른 정원 둘러보기 리스트(랜덤 매칭)(추후구현) 
 	
 	
-	// 사용용도: 친구 신청(insert), 수락 or 거절(update), 친구 끊기(update)  
+	// 사용용도: insert: 친구 신청, update: 수락 or 거절(), 친구 끊기
 	public Friend save(Friend friend);
 	
 	// 받은 친구 신청 리스트(본인 수신 & 삭제 null & 수락 null)
