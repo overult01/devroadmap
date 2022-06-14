@@ -15,26 +15,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// insert는 sql문으로 별도로 과목 정보를 넣어주었다. 
 @NoArgsConstructor
 @Entity
 @Getter @Setter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "title")})
-public class Subjects {
+public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     
     @Column(nullable = false)
     private String title;
     
-    @Column(nullable = false)
-    private int expectedtime;
-    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Field field;
     
-    private String detailedsubjects;
+    private String detailedsubject;
 }
