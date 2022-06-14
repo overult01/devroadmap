@@ -112,7 +112,6 @@ public class IndexController {
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
 				user.setField(null); // 임시 
-				user.setType(null);
 				user.setNickname(null);
 				
 				userRepository.save(user);

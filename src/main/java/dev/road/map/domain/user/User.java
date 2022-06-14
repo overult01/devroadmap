@@ -42,11 +42,7 @@ public class User {
     
     private String password;
     
-//    @Column(nullable = false)
     private String nickname;
-    
-    @Enumerated(EnumType.STRING)
-    private Type type;
     
     @Enumerated(EnumType.STRING)
     private Field field;
@@ -66,10 +62,9 @@ public class User {
     
     // 필수값만 있는 생성자 (가입시)
     @Builder
-	public User(String password, Field field, Type type, String nickname, String email, Role role) {
+	public User(String password, Field field, String nickname, String email, Role role) {
     	this.password = password;
     	this.field = field;
-    	this.type = type;
         this.nickname = nickname; 
         this.email = email; 
         this.role = role;
