@@ -43,6 +43,9 @@ public class IndexController {
 	
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
+	
+	@Value("${frontDomain}")
+	String frontDomain;
     
 	// 이메일 인증
     @RequestMapping("/signup/mail")
@@ -90,7 +93,7 @@ public class IndexController {
 		// 변화된 사항 저장(update)
 		userRepository.save(user);
 		// 회원가입 페이지로 리디이렉트
-		String redirect_uri="http://localhost:3000/signup";
+		String redirect_uri= frontDomain + "/signup";
 		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok().body("signup2");
     }
@@ -113,7 +116,7 @@ public class IndexController {
 				user.setNickname(null);
 				
 				userRepository.save(user);
-//				response.sendRedirect("/signin");
+				response.sendRedirect(frontDomain + "/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
