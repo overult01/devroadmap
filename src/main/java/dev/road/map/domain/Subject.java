@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// insert는 sql문으로 별도로 과목 정보를 넣어주었다. 
 @NoArgsConstructor
 @Entity
 @Getter @Setter
