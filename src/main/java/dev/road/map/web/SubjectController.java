@@ -1,22 +1,16 @@
 package dev.road.map.web;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Utf8;
 
 import dev.road.map.commons.ParseUser;
 import dev.road.map.domain.Subject;
@@ -28,6 +22,7 @@ import dev.road.map.domain.user.UserRepository;
 @RestController
 public class SubjectController {
 
+	// json 반환 
 	@Autowired
 	public ObjectMapper mapper;
 	

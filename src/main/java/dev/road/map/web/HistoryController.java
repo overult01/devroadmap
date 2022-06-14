@@ -23,6 +23,7 @@ import dev.road.map.service.UserService;
 @RestController
 public class HistoryController {
 
+	// json 반환 
 	@Autowired
 	public ObjectMapper mapper;
 	
