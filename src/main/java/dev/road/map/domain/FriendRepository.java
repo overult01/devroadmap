@@ -16,7 +16,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 	public List<Friend> findByUser2(User user2);
 
 	// 본인신청 & 삭제 null & 수락 y + 본인 수신 & 삭제 null & 수락 y
-	// 친구 리스트 조회
+	// 친구 리스트 조회(user 리턴)
 	@Query(value=
 			// 본인 신청 
 			"select u.nickname, u.field, u.profile "
@@ -31,17 +31,17 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 			+ "select u.nickname, u.field, u.profile "
 			+ "from user AS u JOIN friend AS f "
 			+ "ON u.email= f.email_f2 "
-			+ "where f.email_f1=?2 " // 입력받은 email
+			+ "where f.email_f2=?1 " // 입력받은 email
 			+ "AND f.accept=TRUE "
 			+ "AND NOT f.isdelete=TRUE "
 			+ "AND NOT u.isdelete=TRUE"
 			, nativeQuery = true) 
 	public List<User> selectAllFriends(User user1);
 
-	// 다른 정원 둘러보기 리스트(랜덤 매칭)
+	// 다른 정원 둘러보기 리스트(랜덤 매칭)(추후구현) 
 	
 	
-	// 사용용도: 친구 신청(insert), 수락 or 거절(alter) 
+	// 사용용도: 친구 신청(insert), 수락 or 거절(update), 친구 끊기(update)  
 	public Friend save(Friend friend);
 	
 	// 받은 친구 신청 리스트(본인 수신 & 삭제 null & 수락 null)
@@ -51,7 +51,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 			+ "AND NOT isdelete=TRUE "
 			+ "AND accept=null" , nativeQuery = true) 
 	public List<Friend> selectAllPropsalFrom(User user2); // String email인지 확인 필요
-	
 	
 
 

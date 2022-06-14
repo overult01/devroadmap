@@ -32,8 +32,11 @@ public class FriendController {
 	// 조회 
 	// 친구 리스트 
 	public ResponseEntity<List<User>> friendList(HttpServletRequest request){
+		// 현재 로그인한 유저 
 		String email = parseUser.parseEmail(request);
-		List<User> friendList = friendRepository.selectAllFriends(email);
+		User user = userRepository.findByEmail(email);
+
+		List<User> friendList = friendRepository.selectAllFriends(user);
 		return ResponseEntity.ok().body(friendList);
 	}
 
@@ -91,18 +94,29 @@ public class FriendController {
 			}
 		}
 		
-
-		return ResponseEntity.ok().body("proposal success");
-		
-		// 
-
+		return ResponseEntity.ok().body("acceptOrNot success");
 	}
 
 	// 친구 끊기
 	public ResponseEntity<String> disconnect(HttpServletRequest request){
-		
-		return ResponseEntity.ok().body("proposal success");
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
 
+		// 끊을 친구 이메일
+		String friend_email = request.getParameter("friend");
+		User friend_user = userRepository.findByEmail(friend_email);
+		
+		Friend friend = Friend.builder()
+			.user1(friend_user)
+			.user2(friend_user)
+			.build();
+		friend.setIsdelete(true);
+		
+		// 변경사항 저장
+		friendRepository.save(friend);
+		
+		return ResponseEntity.ok().body("disconnect success");
 	}
 	
 	// 다른 정원 둘러보기 on/off
