@@ -52,6 +52,14 @@ public class IndexController {
     		try {
     			// 이메일 인증
     			String authKey = mailService.SignupAuthMail(email);
+
+    			User user = new User();
+    			user.setEmail(email);
+    			user.setAuthKey(authKey);
+    			
+    			// 서비스를 이용해 리포지터리에 사용자 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
+    			userService.create(user);
+    			
     			if (authKey != null) { // 이메일 발송 성공
     				return ResponseEntity.ok().header("email", email).body("send mail");
     			}
@@ -73,16 +81,17 @@ public class IndexController {
     @RequestMapping("/signup/mail/confirm")
     public ResponseEntity<String> comfirmMail(String email, String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		System.out.println("인증중");
-		// DB 저장
-		User user = new User();
-		user.setEmail(email);
-		user.setRole(Role.MAIL);
+		// AuthKey가 일치하면 Role 을 Mail로 업그레이드 
+		User user = userRepository.findByEmail(email);
+		if (user.getAuthKey().equals(authKey)) {
+			user.setRole(Role.MAIL);
+		}
 		
-		// 서비스를 이용해 리포지터리에 사용자 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
-		userService.create(user);
+		// 변화된 사항 저장(update)
+		userRepository.save(user);
 		// 회원가입 페이지로 리디이렉트
-//		String redirect_uri="/signup";
-//		response.sendRedirect(redirect_uri);
+		String redirect_uri="http://localhost:3000/signup";
+		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok().body("signup2");
     }
     
