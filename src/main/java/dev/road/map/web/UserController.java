@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dev.road.map.commons.ParseUser;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
@@ -15,6 +17,10 @@ import dev.road.map.service.UserService;
 @RestController
 public class UserController {
 
+	// json 반환 
+	@Autowired
+	public ObjectMapper mapper;
+	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -26,17 +32,17 @@ public class UserController {
 	
 	// 닉네임 중복확인(비동기)
     @RequestMapping("/edit/nickname/check")
-    public String nicknamecheck(HttpServletRequest request, String nickname){
-    	String email = parseUser.parseEmail(request);
+    public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
     	// 현재 로그인한 유저 
+    	String email = parseUser.parseEmail(request);
     	User user = userRepository.findByEmail(email);
     	String existNick = user.getNickname();
     	
     	// 사용가능한 닉네임일 때만 ok 반환
     	if (existNick == nickname || userRepository.findByNickname(nickname) == null) {
-			return "ok";
+    		return ResponseEntity.ok().body("ok");
 		}
-		return "fail";  
+		return ResponseEntity.ok().body("fail");
     }
     
     // 회원 정보 수정
