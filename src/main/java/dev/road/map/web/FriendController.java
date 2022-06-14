@@ -39,7 +39,7 @@ public class FriendController {
 		return ResponseEntity.ok().body(friendList);
 	}
 
-	// 다른 정원 둘러보기 리스트(랜덤 매칭)
+	// 다른 정원 둘러보기 리스트(랜덤 매칭) - 진도율(로드맵 기준) 10단위로 하고. 10단위가 없으면 다른 범위 탐색.(while). 백1, 프1(매일 달라지는)
 //	public ResponseEntity<String> matchList(HttpServletRequest request){
 //		
 //		return ResponseEntity.ok().body("proposal success");
@@ -137,7 +137,7 @@ public class FriendController {
 
 	}
 
-	// 정원사 검색(닉네임 기반)
+	// 정원사 검색(닉네임 기반, unmatching 인 유저도 검색 불가)
 	public ResponseEntity<User> search(HttpServletRequest request){
 		String search_nick = request.getParameter("searchNickname");
 		User user = friendRepository.search(search_nick);
