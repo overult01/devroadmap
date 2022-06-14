@@ -45,8 +45,6 @@ public class IndexController {
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
 
-	private Object object;
-	
 	@Value("${frontDomain}")
 	String frontDomain;
     
