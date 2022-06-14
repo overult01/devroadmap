@@ -8,8 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import dev.road.map.domain.user.User;
 
 public interface FriendRepository extends JpaRepository<Friend, Long>{
+	
+	// 본인 신청(본인이 친구 요청한 대상)
+	public List<Friend> findByUser1(User user1);
+	
+	// 본인 수신(친구 요청을 준 상대방)
+	public List<Friend> findByUser2(User user2);
 
-	// 본인신청 & 삭제 n & 수락 y + 본인 수락 & 삭제 n & 수락 y
+	// 본인신청 & 삭제 null & 수락 y + 본인 수신 & 삭제 null & 수락 y
 	// 친구 리스트 조회
 	@Query(value=
 			// 본인 신청 
@@ -21,7 +27,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 			+ "AND NOT f.isdelete=TRUE "
 			+ "AND NOT u.isdelete=TRUE "
 			+ "UNION ALL "
-			// 본인 수락
+			// 본인 수신
 			+ "select u.nickname, u.field, u.profile "
 			+ "from user AS u JOIN friend AS f "
 			+ "ON u.email= f.email_f2 "
@@ -29,12 +35,24 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 			+ "AND f.accept=TRUE "
 			+ "AND NOT f.isdelete=TRUE "
 			+ "AND NOT u.isdelete=TRUE"
-			, nativeQuery = true) // 컬럼명 email_f1로 바꿀 예정 
-	public List<User> selectAllFriends(String email);
+			, nativeQuery = true) 
+	public List<User> selectAllFriends(User user1);
 
 	// 다른 정원 둘러보기 리스트(랜덤 매칭)
 	
 	
-	// 친구 신청	
+	// 사용용도: 친구 신청(insert), 수락 or 거절(alter) 
 	public Friend save(Friend friend);
+	
+	// 받은 친구 신청 리스트(본인 수신 & 삭제 null & 수락 null)
+	@Query(value = 
+			"SELECT email_f1 FROM friend "
+			+ "WHERE email_f2=?1 "
+			+ "AND NOT isdelete=TRUE "
+			+ "AND accept=null" , nativeQuery = true) 
+	public List<Friend> selectAllPropsalFrom(User user2); // String email인지 확인 필요
+	
+	
+
+
 }
