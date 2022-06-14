@@ -24,7 +24,7 @@ import lombok.Setter;
 public class History {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     
@@ -33,8 +33,8 @@ public class History {
     private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "subjects_id", insertable=false, updatable=false) // subjects_id 컬럼이 pk, fk 관계 	
-    private Subjects subjects;
+	@JoinColumn(name = "subject_id", insertable=false, updatable=false) // subjects_id 컬럼이 pk, fk 관계 	
+    private Subject subject;
     
 	@CreationTimestamp
 	private Timestamp completedate;    

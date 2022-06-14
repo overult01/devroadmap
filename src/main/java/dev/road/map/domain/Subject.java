@@ -19,22 +19,19 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "title")})
-public class Subjects {
+public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     
     @Column(nullable = false)
     private String title;
     
-    @Column(nullable = false)
-    private int expectedtime;
-    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Field field;
     
-    private String detailedsubjects;
+    private String detailedsubject;
 }
