@@ -62,6 +62,8 @@ public class User {
     
     private Boolean isdelete;
     
+    private String authKey;
+    
     // 필수값만 있는 생성자 (가입시)
     @Builder
 	public User(String password, Field field, Type type, String nickname, String email, Role role) {
