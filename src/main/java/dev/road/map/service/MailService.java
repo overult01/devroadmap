@@ -19,8 +19,8 @@ public class MailService {
 
 	String senderMail = "devroadmap0701@gmail.com";
 	
-	@Value("${domain}")
-	String domain;
+	@Value("${backDomain}")
+	String backDomain;
 
 	// 인증 메일 발송 
 	@Async
@@ -78,7 +78,7 @@ public class MailService {
 	        //메일 내용 설정 : 템플릿 프로세스
 	        String html = new StringBuffer().append("<h1>[이메일 인증]</h1>")
 					.append("<p>아래 링크를 클릭하시면 아이디로 사용될 이메일 인증이 완료됩니다.</p>")
-					.append("<a href='" + domain + "/signup/mail/confirm?email=")
+					.append("<a href='" + backDomain + "/signup/mail/confirm?email=")
 					.append(receiverMail)
 					.append("&authKey=")
 					.append(authKey)

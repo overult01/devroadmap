@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.road.map.config.security.TokenProvider;
+import dev.road.map.domain.user.Field;
 import dev.road.map.domain.user.Role;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
@@ -43,6 +44,11 @@ public class IndexController {
 	
 	@Value("${jwt.secret}")
     private String secret; // 숨김처리	
+
+	private Object object;
+	
+	@Value("${frontDomain}")
+	String frontDomain;
     
 	// 이메일 인증
     @RequestMapping("/signup/mail")
@@ -90,30 +96,41 @@ public class IndexController {
 		// 변화된 사항 저장(update)
 		userRepository.save(user);
 		// 회원가입 페이지로 리디이렉트
-		String redirect_uri="http://localhost:3000/signup";
+		String redirect_uri= frontDomain + "/signup";
 		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok().body("signup2");
     }
     
 	// 가입
-    @RequestMapping("/signup")
+    @SuppressWarnings("unlikely-arg-type")
+	@RequestMapping("/signup")
     public ResponseEntity<String> authenticate(HttpServletResponse response, HttpServletRequest request, LoginDTO loginDTO) {
     	try {
 	    	String email = request.getParameter("email");
 	    	String password = request.getParameter("password");
+	    	String profile = request.getParameter("profile");
+	    	String nickname = request.getParameter("nickname");	    	
+	    	String fieldStr = request.getParameter("field");
+	    	Field field;
+	    	
 	    	User user = userRepository.findByEmail(email);
 	    	// 이메일 인증	완료 회원(mail)
 			if (user.getRole() == Role.MAIL) { // 인증 성공해야지 회원가입 가능
 				System.out.println("회원가입 중");
-				// DB 저장
+
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
-				user.setField(null); // 임시 
-				user.setType(null);
-				user.setNickname(null);
+				user.setNickname(nickname);
+				if (fieldStr.equals(Field.front)) {
+					user.setField(Field.front);
+				}
+				else {
+					user.setField(Field.back);
+				}
 				
+				// 변경사항 저장
 				userRepository.save(user);
-//				response.sendRedirect("/signin");
+				response.sendRedirect(frontDomain + "/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
@@ -145,7 +162,7 @@ public class IndexController {
     		String token = tokenprovider.generateToken(user);
     		return ResponseEntity.ok()
     				.header("jwtToken", token)
-    				.body("com");
+    				.body("jwt create success");
 		}
     	else { // 해당 user가 없거나, matches 로 확인한 비번이 틀리면
 	    	return ResponseEntity.badRequest().body("login failed");
