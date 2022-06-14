@@ -14,6 +14,7 @@ import dev.road.map.domain.FriendRepository;
 import dev.road.map.domain.user.Field;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
+import dev.road.map.dto.UserDTO;
 
 @RestController
 public class FriendController {
@@ -136,9 +137,10 @@ public class FriendController {
 
 	}
 
-	// 정원사 검색
-	public ResponseEntity<String> search(HttpServletRequest request){
-		
-		return ResponseEntity.ok().body("proposal success");
+	// 정원사 검색(닉네임 기반)
+	public ResponseEntity<User> search(HttpServletRequest request){
+		String search_nick = request.getParameter("searchNickname");
+		User user = friendRepository.search(search_nick);
+		return ResponseEntity.ok().body(user);
 	}
 }

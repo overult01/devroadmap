@@ -52,6 +52,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 			+ "AND accept=null" , nativeQuery = true) 
 	public List<Friend> selectAllPropsalFrom(User user2); // String email인지 확인 필요
 	
+	// 정원사 검색(닉네임 기반)
+	@Query(value = 
+			"SELECT * FROM user "
+			+ "WHERE nickname=?1 "
+			+ "AND NOT isdelete=TRUE "
+			+ "AND NOT unmatching=TRUE", nativeQuery = true)
+	public User search(String nickname);
 
 
 }
