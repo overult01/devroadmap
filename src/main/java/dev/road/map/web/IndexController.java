@@ -110,7 +110,14 @@ public class IndexController {
 	    	String nickname = request.getParameter("nickname");	    	
 	    	String fieldStr = request.getParameter("field");
 	    	
+	    	System.out.println(email);
+	    	System.out.println(password);
+	    	System.out.println(profile);
+	    	System.out.println(nickname);
+	    	
 	    	User user = userRepository.findByEmail(email);
+	    	System.out.println(user);
+	    	
 	    	// 이메일 인증	완료 회원(mail)
 			if (user.getRole() == Role.MAIL) { // 인증 성공해야지 회원가입 가능
 				System.out.println("회원가입 중");
@@ -119,7 +126,7 @@ public class IndexController {
 				user.setRole(Role.USER);
 				user.setNickname(nickname);
 				user.setProfile(profile);
-				if (fieldStr.equals(Field.front)) {
+				if (fieldStr.equals("front")) {
 					user.setField(Field.front);
 				}
 				else {
@@ -128,7 +135,7 @@ public class IndexController {
 				
 				// 변경사항 저장
 				userRepository.save(user);
-				response.sendRedirect(frontDomain + "/signin");
+//				response.sendRedirect(frontDomain + "/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
