@@ -31,6 +31,8 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.20'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     
+	implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.6.0'
+    
     implementation 'org.springframework.boot:spring-boot-devtools:2.4.0'
     implementation 'org.json:json:20210307'
     implementation 'org.webjars:webjars-locator-core:0.46'
