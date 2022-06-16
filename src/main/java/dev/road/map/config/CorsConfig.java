@@ -18,6 +18,8 @@ public class CorsConfig {
       config.addAllowedHeader("*");  // Access-Control-Request-Headers  
       config.addAllowedMethod("*"); // Access-Control-Request-Method
       
+      config.addExposedHeader("jwtToken");
+      
       source.registerCorsConfiguration("/**", config);
       
       return new CorsFilter(source);
