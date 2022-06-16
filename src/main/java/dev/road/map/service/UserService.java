@@ -55,11 +55,15 @@ public class UserService {
     	// 현재 로그인한 유저 
     	User user = userRepository.findByEmail(email);
 
+    	String nickname = request.getParameter("nickname").trim();
 		String password = request.getParameter("password").trim();
 		String profile = request.getParameter("profile").trim();
 		String fieldStr = request.getParameter("field").trim();
 		
 		// 수정 정보가 있을 때만 반영 
+		if (!nickname.isEmpty()) {
+			user.setNickname(nickname);
+		}
 		if (!password.isEmpty()) {
 			user.setPassword(password);
 		}
@@ -68,7 +72,7 @@ public class UserService {
 		}		
 		if (!fieldStr.isEmpty()) {
 			Field field;
-			if (Field.back.equals(fieldStr)) {
+			if ("back".equals(fieldStr)) {
 				field = Field.back;
 			}
 			else {
