@@ -17,11 +17,7 @@ public class CorsConfig {
       config.addAllowedOriginPattern("*"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)  
       config.addAllowedHeader("*");  // Access-Control-Request-Headers  
       config.addAllowedMethod("*"); // Access-Control-Request-Method
-      
-      config.addExposedHeader("jwtToken");
-      
-      source.registerCorsConfiguration("/**", config);
-      
+
       return new CorsFilter(source);
    }
 
