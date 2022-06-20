@@ -1,0 +1,76 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+    implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.4.0'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+	testImplementation 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+    
+	implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.1.9'
+    
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.json:json'
+    implementation 'org.webjars:webjars-locator-core'
+    implementation 'org.webjars:bootstrap'
+    implementation 'org.webjars:jquery'
+    implementation 'commons-io:commons-io'
+    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework:spring-context-support'
+    implementation 'commons-fileupload:commons-fileupload'
+    implementation 'org.hamcrest:hamcrest'
+    implementation 'com.h2database:h2'
+    implementation 'org.hibernate:hibernate-entitymanager'
+    implementation 'org.hibernate:hibernate-core'
+    implementation 'org.javassist:javassist'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson'
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
