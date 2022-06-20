@@ -30,7 +30,7 @@ public class UserController {
 	@Autowired
 	ParseUser parseUser;
 	
-	// 닉네임 중복확인(비동기)
+	// 닉네임 중복확인(비동기) - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
     	// 현재 로그인한 유저 

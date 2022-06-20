@@ -48,6 +48,19 @@ public class IndexController {
 	@Value("${frontDomain}")
 	String frontDomain;
     
+	// 닉네임 중복확인(비동기) - 회원 가입시
+    @RequestMapping("/signup/nickname/")
+    public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
+    	
+    	User user = userRepository.findByNickname(nickname);
+    	
+    	// 사용가능한 닉네임일 때만 ok 반환
+    	if (user == null) {
+    		return ResponseEntity.ok().body("ok");
+		}
+		return ResponseEntity.ok().body("fail");
+    }
+    	
 	// 이메일 인증
     @RequestMapping("/signup/mail")
     public ResponseEntity<String> signupMail(String email, HttpServletRequest request) {
