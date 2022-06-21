@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.road.map.config.security.TokenProvider;
 import dev.road.map.domain.user.Field;
@@ -115,18 +118,17 @@ public class IndexController {
 	// 가입
     @SuppressWarnings("unlikely-arg-type")
 	@RequestMapping("/signup")
-    public ResponseEntity<String> authenticate(HttpServletResponse response, HttpServletRequest request, LoginDTO loginDTO) {
+    public ResponseEntity<String> authenticate(HttpServletResponse response, HttpServletRequest request) {
     	try {
 	    	String email = request.getParameter("email");
 	    	String password = request.getParameter("password");
-	    	String profile = request.getParameter("profile");
 	    	String nickname = request.getParameter("nickname");	    	
 	    	String fieldStr = request.getParameter("field");
-	    	
+	    		    	
 	    	System.out.println(email);
 	    	System.out.println(password);
-	    	System.out.println(profile);
 	    	System.out.println(nickname);
+	    	System.out.println(fieldStr);
 	    	
 	    	User user = userRepository.findByEmail(email);
 	    	System.out.println(user);
@@ -138,7 +140,6 @@ public class IndexController {
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
 				user.setNickname(nickname);
-				user.setProfile(profile);
 				if (fieldStr.equals("front")) {
 					user.setField(Field.front);
 				}
@@ -148,7 +149,6 @@ public class IndexController {
 				
 				// 변경사항 저장
 				userRepository.save(user);
-//				response.sendRedirect(frontDomain + "/signin");
 				return ResponseEntity.ok().body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
