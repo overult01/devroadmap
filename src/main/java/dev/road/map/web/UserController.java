@@ -3,9 +3,11 @@ package dev.road.map.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,6 +32,12 @@ public class UserController {
 	@Autowired
 	ParseUser parseUser;
 	
+	@Value("${directory}")
+	private String directory;
+
+	@Value("${memberImagePath}")
+	String memberImagePath;
+	
 	// 닉네임 중복확인(비동기) - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
@@ -47,9 +55,9 @@ public class UserController {
     
     // 회원 정보 수정
     @RequestMapping("/edit/userdetatils")
-    public ResponseEntity<String> edit(HttpServletRequest request){
+    public ResponseEntity<String> edit(HttpServletRequest request, MultipartFile profile){
     	// 닉네임(중복확인 먼저 해야 수정 가능. 프론트단에서 확인)
-    	if (userService.edit(request) != null) {
+    	if (userService.edit(request, profile) != null) {
     		return ResponseEntity.ok().body("edit success");
 		};
     	

@@ -1,10 +1,16 @@
 package dev.road.map.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.road.map.commons.ParseUser;
 import dev.road.map.domain.user.Field;
@@ -22,6 +28,18 @@ public class UserService {
     
 	@Autowired
 	ParseUser parseUser;
+
+	@Autowired
+	FileService fileService;
+	
+	@Value("${root}")
+	private String root;
+
+	@Value("${directory}")
+	private String directory;
+
+	@Value("${memberImagePath}")
+	String memberImagePath;
 
 	// 서비스를 이용한 유저 저장(user, email이 제대로 입력되었는지, 기존에 가입된 email인지 체크)
 	public User create(final User user) {
@@ -50,15 +68,62 @@ public class UserService {
 	
 	// 회원 정보 수정 
 	@SuppressWarnings("unlikely-arg-type")
-	public User edit(HttpServletRequest request) {
+	public User edit(HttpServletRequest request, MultipartFile profile) {
     	String email = parseUser.parseEmail(request);
     	// 현재 로그인한 유저 
     	User user = userRepository.findByEmail(email);
 
     	String nickname = request.getParameter("nickname").trim();
 		String password = request.getParameter("password").trim();
-		String profile = request.getParameter("profile").trim();
 		String fieldStr = request.getParameter("field").trim();
+
+		// 전체 저장경로 + 파일 이름
+		// ex. ../gmail/hello.jpg
+		String savedProfile = null;
+		
+		if (!profile.isEmpty()) {
+			
+			// 파일 업로드
+			try {
+				//	hello@naver.com
+				String[] chunkEmail = email.split("@");
+				String userEmail = chunkEmail[0]; // hello
+				String[] chunkEmail2 = chunkEmail[1].split("."); 
+				String userProvider = chunkEmail2[0]; // naver
+				String savePath = "/" + directory + "/" + memberImagePath + "/" + userProvider; // 저장경로 
+	
+				List<String> path = new ArrayList<String>();
+				path.add(root);
+				path.add(directory);
+				path.add(memberImagePath);
+				path.add(userProvider);
+	
+				// 폴더 생성
+				fileService.mkDir(path);
+
+				// 원래 파일 명에서 확장자(.) 추출
+				String ext = profile.getOriginalFilename().substring(profile.getOriginalFilename().indexOf("."));
+
+				// 파일내용 + 파일명 --> 서버의 특정폴더(c:upload)에 영구저장. 서버가 종료되더라도 ec2 폴더에 저장.
+				String newname = userEmail + ext;
+				savedProfile = savePath + "/" + newname;
+				
+				user.setProfile(savedProfile);
+
+				// 파일 업로드
+				File serverfile = new File(root.concat(savePath + "/"), newname);
+				serverfile.createNewFile();
+				serverfile.setReadable(true, false);
+				serverfile.setWritable(true, false);
+				serverfile.setExecutable(true, false);
+				profile.transferTo(serverfile);
+				
+				// DB에 업데이트 
+				user.setProfile(savedProfile);
+			} catch (Exception e) {
+					e.printStackTrace();
+				}
+		} // if end
 		
 		// 수정 정보가 있을 때만 반영 
 		if (!nickname.isEmpty()) {
@@ -67,9 +132,6 @@ public class UserService {
 		if (!password.isEmpty()) {
 			user.setPassword(password);
 		}
-		if (!profile.isEmpty()) {
-			user.setProfile(profile);
-		}		
 		if (!fieldStr.isEmpty()) {
 			Field field;
 			if ("back".equals(fieldStr)) {
@@ -80,7 +142,7 @@ public class UserService {
 			}
 			user.setField(field);
 		}
-		// 변경된 유저 정보 저장
+		// 변경된 유저 정보 DB 저장
 		userRepository.save(user);
 		return user;
 	}

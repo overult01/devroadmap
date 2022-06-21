@@ -2,14 +2,11 @@ package dev.road.map.domain.user;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -18,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 
 import dev.road.map.dto.UserDTO;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,10 +29,6 @@ import lombok.Setter;
 @Getter @Setter
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class User {
-
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false)
-//    private Long id;
     
     @Id
     @Column(length = 120, name = "email", nullable = false)
@@ -50,7 +44,10 @@ public class User {
 	@CreationTimestamp
 	private Timestamp joindate;
 
-    private String profile;
+	// 프로필사진
+	@Getter(AccessLevel.NONE)
+	private String profile;
+	
     private Boolean unmatching;
     
     @Enumerated(EnumType.STRING)
@@ -70,6 +67,14 @@ public class User {
         this.role = role;
     }
 
+	public String getProfile() {
+		if (profile == null || profile.equals("")) {
+			return null;
+		} else {
+			return profile;
+		}
+	}
+    
 	public String getRoleString() {
 		return this.role.toString();
 	}
