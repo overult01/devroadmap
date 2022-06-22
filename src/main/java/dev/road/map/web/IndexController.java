@@ -59,7 +59,10 @@ public class IndexController {
     	
     	// 사용가능한 닉네임일 때만 ok 반환
     	if (user == null) {
-    		return ResponseEntity.ok().body("ok");
+    		return ResponseEntity.ok()
+    				.header("Access-Control-Allow-Origin", "http://localhost:3000")
+					.header("Access-Control-Allow-Credentials", "true")
+    				.body("ok");
 		}
 		return ResponseEntity.ok().body("fail");
     }
@@ -81,7 +84,9 @@ public class IndexController {
     			userService.create(user);
     			
     			if (authKey != null) { // 이메일 발송 성공
-    				return ResponseEntity.ok().header("email", email).body("send mail");
+    				return ResponseEntity.ok().header("Access-Control-Allow-Origin", "http://localhost:3000")
+    						.header("Access-Control-Allow-Credentials", "true")
+    						.body("send mail");
     			}
     			else { // 이메일 발송 실패하면 에러 발생
     				throw new RuntimeException(); 
@@ -112,7 +117,10 @@ public class IndexController {
 		// 회원가입 페이지로 리디이렉트
 		String redirect_uri= frontDomain + "/signup";
 		response.sendRedirect(redirect_uri);
-		return ResponseEntity.ok().body("signup2");
+		return ResponseEntity.ok()
+				.header("Access-Control-Allow-Origin", "http://localhost:3000")
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("signup2");
     }
     
 	// 가입
@@ -149,7 +157,10 @@ public class IndexController {
 				
 				// 변경사항 저장
 				userRepository.save(user);
-				return ResponseEntity.ok().body("signup3(complete)");
+				return ResponseEntity.ok()
+						.header("Access-Control-Allow-Origin", "http://localhost:3000")
+						.header("Access-Control-Allow-Credentials", "true")
+						.body("signup3(complete)");
 			}
 			else { // 이메일 인증 안되어 있으면
 				throw new RuntimeException(); 
