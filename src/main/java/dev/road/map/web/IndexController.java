@@ -56,12 +56,12 @@ public class IndexController {
     	// 사용가능한 닉네임일 때만 ok 반환
     	if (user == null) {
     		return ResponseEntity.ok()
-    				.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+    				.header("Access-Control-Allow-Origin", frontDomain)
 					.header("Access-Control-Allow-Credentials", "true")
     				.body("ok");
 		}
 		return ResponseEntity.ok()
-				.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
 				.body("fail");
     }
@@ -83,7 +83,7 @@ public class IndexController {
     			userService.create(user);
     			
     			if (authKey != null) { // 이메일 발송 성공
-    				return ResponseEntity.ok().header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+    				return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
     						.header("Access-Control-Allow-Credentials", "true")
     						.body("send mail");
     			}
@@ -117,7 +117,7 @@ public class IndexController {
 		String redirect_uri= frontDomain + "/signup";
 		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok()
-				.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
 				.body("signup2");
     }
@@ -157,7 +157,7 @@ public class IndexController {
 				// 변경사항 저장
 				userRepository.save(user);
 				return ResponseEntity.ok()
-						.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+						.header("Access-Control-Allow-Origin", frontDomain)
 						.header("Access-Control-Allow-Credentials", "true")
 						.body("signup3(complete)");
 			}
@@ -187,13 +187,13 @@ public class IndexController {
     	if (user != null) {
     		// 토큰 생성
     		String token = tokenprovider.generateToken(user);
-    		return ResponseEntity.ok().header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+    		return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
 					.header("Access-Control-Allow-Credentials", "true")
     				.body(token);
 		}
     	else { // 해당 user가 없거나, matches 로 확인한 비번이 틀리면
 	    	return ResponseEntity.badRequest()
-	    			.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+	    			.header("Access-Control-Allow-Origin", frontDomain)
 					.header("Access-Control-Allow-Credentials", "true")
 	    			.body("login failed");
 		}
@@ -233,20 +233,20 @@ public class IndexController {
 //			// 위에서 설정한 값을 Spring security에서 사용할 수 있도록 세션에 설정
 //			session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 				  
-				  return ResponseEntity.ok().header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+				  return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
   						.header("Access-Control-Allow-Credentials", "true")
 						  .body("com");
 				
 			} catch (Exception e) {
     			String err = e.toString();
 				return ResponseEntity.badRequest()
-						.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+						.header("Access-Control-Allow-Origin", frontDomain)
 						.header("Access-Control-Allow-Credentials", "true")
 						.body(err);
 		  }
 	  }
 		return ResponseEntity.badRequest()
-				.header("Access-Control-Allow-Origin", "https://devroadmap-front.herokuapp.com")
+				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
 				.body("error");
 	}
