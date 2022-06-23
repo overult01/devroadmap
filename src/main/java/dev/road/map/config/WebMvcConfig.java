@@ -17,11 +17,11 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		// 모든 경로 대상
 		registry.addMapping("/**")
 		// Origin이 http://localhost:3000에 대해서 get,put,delete,.. 메서드를 허용
-		.allowedOrigins("http://localhost:3000")
+		.allowedOrigins("https://devroadmap-front.herokuapp.com")
 		.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 		// 모든 헤더, 인증정보도 허용 
 		.allowedHeaders("*") 
 		.allowCredentials(true)
-		.maxAge(MAX_AGE_SECS);
+		.maxAge(MAX_AGE_SECS); // // 3600초 동안 preflight 결과를 캐시에 저장
 	}
 }

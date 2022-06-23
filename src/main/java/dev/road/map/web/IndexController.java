@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import dev.road.map.config.security.TokenProvider;
 import dev.road.map.domain.user.Field;
 import dev.road.map.domain.user.Role;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
-import dev.road.map.dto.LoginDTO;
 import dev.road.map.service.MailService;
 import dev.road.map.service.UserService;
 
@@ -179,7 +175,6 @@ public class IndexController {
     public ResponseEntity<String> signin(HttpServletRequest request) {
     	
     	System.out.println("로그인중");
-    	
     	String email = request.getParameter("email");
     	String password = request.getParameter("password");
 
