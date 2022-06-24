@@ -1,4 +1,4 @@
-package dev.road.map.domain;
+package dev.road.map.domain.history;
 
 import java.sql.Timestamp;
 
@@ -34,9 +34,8 @@ public class History {
 	@JoinColumn(name = "user_email", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
     private User user;
 
-	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "subject_id", insertable=false, updatable=false) // subjects_id 컬럼이 pk, fk 관계 	
-    private Subject subject;
+    @Column(nullable = false)
+    private Long subject; // 과목을 프론트, 백 각각 1~19까지 지정
     
 	@CreationTimestamp
 	private Timestamp completedate;    
