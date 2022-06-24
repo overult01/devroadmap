@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -26,10 +25,6 @@ import dev.road.map.service.UserService;
 @RestController
 public class HistoryController {
 
-	// json 반환 
-	@Autowired
-	public ObjectMapper mapper;
-	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -48,7 +43,7 @@ public class HistoryController {
 	@Value("${frontDomain}")
 	String frontDomain;
 
-	// 정원 기록 리스트 
+	// 유저가 완료한 과목들(숫자)의 전체 리스트 조회
     @RequestMapping("/history")
     public ResponseEntity<?> completeHistory (HttpServletRequest request) throws JsonProcessingException{
     	
@@ -79,6 +74,45 @@ public class HistoryController {
     	System.out.println(jsonObject);
         
     	// 현재 로그인한 유저의 완료한 과목 리스트 
+		return ResponseEntity.ok()
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());
+    }
+    
+    // 로그인한 유저의 과목별 완료여부 조회
+    @RequestMapping("/history/subject/compelete/check")
+    public ResponseEntity<?> SubjectCompleteCheck (HttpServletRequest request, String object){
+    	
+    	// 현재 로그인한 유저 
+    	String email = parseUser.parseEmail(request);
+    	User user = userRepository.findByEmail(email);
+    	    	
+    	// 응답 생성 
+    	JsonObject jsonObject = new JsonObject();
+    	
+    	// 파라미터로 전달받은 String 값을 Long으로 형변환
+    	Long subject = (long) Integer.parseInt(object);
+    	
+    	History result = historyRepository.findByUserAndSubject(user, subject);
+    	
+    	// 완료했으면
+    	// {"user_email":"hello@gmail.com","object":1,"resp":"ok"}
+    	if (result != null) {
+    		jsonObject.addProperty("user_email", email);
+    		jsonObject.addProperty("object", subject);
+    		jsonObject.addProperty("resp", "ok");
+		}
+    	// 완료하지 않았으면
+    	//{"user_email":"overult01@gmail.com","object":2,"resp":"not yet"}
+    	else {
+    		jsonObject.addProperty("user_email", email);
+    		jsonObject.addProperty("object", subject);
+    		jsonObject.addProperty("resp", "not yet");			
+		}
+    	
+    	System.out.println(jsonObject);
+        
 		return ResponseEntity.ok()
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
