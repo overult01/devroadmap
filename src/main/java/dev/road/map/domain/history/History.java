@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 
 import dev.road.map.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,9 +36,18 @@ public class History {
     private User user;
 
     @Column(nullable = false)
-    private Long subject; // 과목을 프론트, 백 각각 1~19까지 지정
+    private int subject; // 과목을 프론트, 백 각각 1~19까지 지정
     
 	@CreationTimestamp
-	private Timestamp completedate;    
+	private Timestamp completedate;   
+	
+    private Boolean isdelete;
+	
+	@Builder
+	public History(User user, int subject, Boolean isdelete) {
+		this.user = user;
+		this.subject = subject;
+		this.isdelete = isdelete;
+	}
     
 }

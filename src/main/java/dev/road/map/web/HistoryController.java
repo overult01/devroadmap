@@ -43,9 +43,39 @@ public class HistoryController {
 	@Value("${frontDomain}")
 	String frontDomain;
 
+	// 사용자가 과목 완료 체크 표시 
+	@RequestMapping("/subject/complete/add")
+    public ResponseEntity<?> subjectComplete (HttpServletRequest request){
+    	
+		// 현재 로그인한 유저 
+    	String email = parseUser.parseEmail(request);
+    	User user = userRepository.findByEmail(email);
+    	
+    	// 숫자로 된 과목 표시 
+    	int subject = Integer.parseInt(request.getParameter("subject"));
+    	
+    	History history = History.builder()
+    			.user(user)
+    			.subject(subject)
+    			.isdelete(false)
+    			.build();
+    	
+    	History history2 = historyRepository.save(history);
+    	if (history2 != null) {
+    		return ResponseEntity.ok()
+    				.header("Access-Control-Allow-Origin", frontDomain)
+    				.header("Access-Control-Allow-Credentials", "true")
+    				.body("subject is added");
+		}
+		return ResponseEntity.badRequest()
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("adding subject is failed");
+	}	
+	
 	// 유저가 완료한 과목들(숫자)의 전체 리스트 조회
     @RequestMapping("/history")
-    public ResponseEntity<?> completeHistory (HttpServletRequest request) throws JsonProcessingException{
+    public ResponseEntity<?> completeHistory (HttpServletRequest request){
     	
     	// 현재 로그인한 유저 
     	String email = parseUser.parseEmail(request);
