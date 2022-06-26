@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 
 import dev.road.map.commons.ParseUser;
+import dev.road.map.domain.user.Field;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
 import dev.road.map.service.UserService;
@@ -19,10 +20,6 @@ import dev.road.map.service.UserService;
 @RestController
 public class UserController {
 
-	// json 반환 
-	@Autowired
-	public ObjectMapper mapper;
-	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -38,6 +35,33 @@ public class UserController {
 	@Value("${memberImagePath}")
 	String memberImagePath;
 	
+	@Value("${frontDomain}")
+	String frontDomain;
+	
+//	현재 로그인한 사용자 정보 불러오기(비동기) - 클라이언트 측에서 jwt를 전달해주면, 복호화하여 사용자 정보(이메일, 닉네임, 프로필 사진, 필드-프론트/백) 전달
+	@RequestMapping("/user/details")
+	public ResponseEntity<?> userDetails(HttpServletRequest request) {
+		
+    	// 현재 로그인한 유저 
+    	String email = parseUser.parseEmail(request);
+    	User user = userRepository.findByEmail(email);
+    	String nickname = user.getNickname();
+    	String profile = user.getProfile();
+    	Field field = user.getField();
+    	
+    	JsonObject jsonObject = new JsonObject();
+    	
+    	jsonObject.addProperty("email", email);
+    	jsonObject.addProperty("nickname", nickname);
+    	jsonObject.addProperty("profile", profile);
+    	jsonObject.addProperty("field", field.toString());
+    	
+    	// {"email":"hello@gmail.com","nickname":"jj","profile":null,"field":"back"}
+		return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());
+	}
+		
 	// 닉네임 중복확인(비동기) - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
