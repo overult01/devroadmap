@@ -32,7 +32,7 @@ public class History {
     private Long id;
     
 	@ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-	@JoinColumn(name = "user_email", insertable=false, updatable=false) // userid 컬럼이 pk, fk 관계 
+	@JoinColumn(name = "user_email") // userid 컬럼이 pk, fk 관계 
     private User user;
 
     @Column(nullable = false)

@@ -54,24 +54,41 @@ public class HistoryController {
     	// 숫자로 된 과목 표시 
     	int subject = Integer.parseInt(request.getParameter("subject"));
     	
-    	History history = History.builder()
-    			.user(user)
-    			.subject(subject)
-    			.isdelete(false)
-    			.build();
-    	
-    	History history2 = historyRepository.save(history);
-    	if (history2 != null) {
-    		return ResponseEntity.ok()
-    				.header("Access-Control-Allow-Origin", frontDomain)
-    				.header("Access-Control-Allow-Credentials", "true")
-    				.body("subject is added");
+    	History history = historyRepository.findByUserAndSubject(user, subject); 
+    	// 유저가 해당 과목에 대해 최초로 완료 체크를 한 경우 
+    	if ( history.getIsdelete() == null) {
+    		History.builder()
+    				.user(user)
+    				.subject(subject)
+    				.isdelete(false)
+    				.build();
 		}
-		return ResponseEntity.badRequest()
+    	
+    	// 기존에 체크 -> 해제 -> 체크 한 경우 (최초 체크가 아닌경우)
+    	else {
+			history.setIsdelete(false);
+		}
+    	
+    	historyRepository.save(history);
+		
+    	// user 진도율(progessRate)에도 반영
+		List<History> histories = historyRepository.findByUserAndIsdelete(user, false);
+		int completeCnt = histories.size();
+		int progessRate = completeCnt * 100 / 19;
+		
+		user.setProgressRate(progessRate);
+		userRepository.save(user);
+		
+		return ResponseEntity.ok()
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
-				.body("adding subject is failed");
-	}	
+				.body("subject is added");
+		}
+//		return ResponseEntity.badRequest()
+//				.header("Access-Control-Allow-Origin", frontDomain)
+//				.header("Access-Control-Allow-Credentials", "true")
+//				.body("adding subject is failed");
+//	}	
 	
 	// 완료 과목 체크 표시 해제
 	@RequestMapping("/subject/complete/withdraw")
@@ -84,24 +101,22 @@ public class HistoryController {
     	// 숫자로 된 과목 표시 
     	int subject = Integer.parseInt(request.getParameter("subject"));
     	
-    	History history = History.builder()
-    			.user(user)
-    			.subject(subject)
-    			.isdelete(true)
-    			.build();
-    	
-    	History history2 = historyRepository.save(history);
-    	if (history2 != null) {
-    		return ResponseEntity.ok()
-    				.header("Access-Control-Allow-Origin", frontDomain)
-    				.header("Access-Control-Allow-Credentials", "true")
-    				.body("subject is withdrawed");
-		}
-		return ResponseEntity.badRequest()
+    	History history = historyRepository.findByUserAndSubject(user, subject);
+    	history.setIsdelete(true);
+    	historyRepository.save(history);
+
+    	// user 진도율(progessRate)에도 반영
+		List<History> histories = historyRepository.findByUserAndIsdelete(user, false);
+		int completeCnt = histories.size();
+		int progessRate = completeCnt * 100 / 19;
+		user.setProgressRate(progessRate);
+		userRepository.save(user);
+		
+		return ResponseEntity.ok()
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
-				.body("withdrawing subject is failed");
-	}	
+				.body("subject is withdrawed");
+		}
 	
 	// 유저가 완료한 과목들(숫자)의 전체 리스트 조회
     @RequestMapping("/history")
@@ -118,7 +133,7 @@ public class HistoryController {
     	JsonObject jsonObject = new JsonObject();
     	JsonArray jsonArray = new JsonArray();    	
     	
-    	List<History> histories = historyRepository.findByUser(user);
+    	List<History> histories = historyRepository.findByUserAndIsdelete(user, false);
     	for(History history : histories) {
     		JsonObject jsonObject_inner = new JsonObject();
     		jsonObject_inner.addProperty("object", history.getSubject());
@@ -150,8 +165,8 @@ public class HistoryController {
     	// 응답 생성 
     	JsonObject jsonObject = new JsonObject();
     	
-    	// 파라미터로 전달받은 String 값을 Long으로 형변환
-    	Long subject = (long) Integer.parseInt(object);
+    	// 파라미터로 전달받은 String 값을 int로 형변환
+    	int subject = Integer.parseInt(object);
     	
     	History result = historyRepository.findByUserAndSubject(user, subject);
     	

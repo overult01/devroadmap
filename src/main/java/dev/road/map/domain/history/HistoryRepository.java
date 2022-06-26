@@ -12,10 +12,10 @@ public interface HistoryRepository extends JpaRepository<History, Long>{
 	History save(History history);
 	
 	// 유저의 완료 과목 확인 
-	List<History> findByUser(User user);
+	List<History> findByUserAndIsdelete(User user, Boolean isdelete);
 	
 	// 로그인한 유저의 과목별 완료여부 조회(history가 조회되면 완료상태, null이면 미완료 상태)
-	History findByUserAndSubject(User user, Long subject);
+	History findByUserAndSubject(User user, int subject);
 	
 	
 }
