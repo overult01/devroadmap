@@ -62,7 +62,7 @@ public class HistoryController {
     	for(History history : histories) {
     		JsonObject jsonObject_inner = new JsonObject();
     		jsonObject_inner.addProperty("object", history.getSubject());
-    		jsonObject_inner.addProperty("resp", "ok");
+    		jsonObject_inner.addProperty("completedate", history.getCompletedate().toString());
     		jsonArray.add(jsonObject_inner);
     		
     		jsonObject.addProperty("user_email", email);
@@ -70,7 +70,7 @@ public class HistoryController {
     		jsonObject.add("complete_subjects", jsonArray);
     	}
     	
-    	// {"user_email":"hello@gmail.com", "user_field":"back", "complete_subjects":[{"object":1,"resp":"ok"},{"object":3,"resp":"ok"}]}
+//    	{"user_email":"hello@gmail.com","user_field":"back","complete_subjects":[{"object":1,"completedate":"2022-06-24 04:42:07.0"},{"object":3,"completedate":"2022-06-26 18:01:07.0"}]}    	
     	System.out.println(jsonObject);
         
     	// 현재 로그인한 유저의 완료한 과목 리스트 
