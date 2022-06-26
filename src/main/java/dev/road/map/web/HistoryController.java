@@ -64,11 +64,10 @@ public class HistoryController {
     		jsonObject_inner.addProperty("object", history.getSubject());
     		jsonObject_inner.addProperty("completedate", history.getCompletedate().toString());
     		jsonArray.add(jsonObject_inner);
-    		
-    		jsonObject.addProperty("user_email", email);
-    		jsonObject.addProperty("user_field", filed);
-    		jsonObject.add("complete_subjects", jsonArray);
     	}
+    	jsonObject.addProperty("user_email", email);
+    	jsonObject.addProperty("user_field", filed);
+    	jsonObject.add("complete_subjects", jsonArray);
     	
 //    	{"user_email":"hello@gmail.com","user_field":"back","complete_subjects":[{"object":1,"completedate":"2022-06-24 04:42:07.0"},{"object":3,"completedate":"2022-06-26 18:01:07.0"}]}    	
     	System.out.println(jsonObject);
