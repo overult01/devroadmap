@@ -143,7 +143,7 @@ public class IndexController {
 	    	// 이메일 인증	완료 회원(mail)
 			if (user.getRole() == Role.MAIL) { // 인증 성공해야지 회원가입 가능
 				System.out.println("회원가입 중");
-
+				user.setProgressRate(0); // 시작할 때 진도율은 0%
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
 				user.setNickname(nickname);
