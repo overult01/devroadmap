@@ -57,6 +57,9 @@ public class User {
     
     private String authKey;
     
+    // 진도율("history 테이블에서 완료한 과목 수 / 19 "에서 소수점 1자리에서 반올림한 백분율 값)
+    private int progressRate;
+    
     // 필수값만 있는 생성자 (가입시)
     @Builder
 	public User(String password, Field field, String nickname, String email, Role role) {
