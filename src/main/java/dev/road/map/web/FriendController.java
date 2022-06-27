@@ -4,12 +4,16 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.json.UTF8JsonGenerator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -19,6 +23,7 @@ import dev.road.map.domain.FriendRepository;
 import dev.road.map.domain.user.Field;
 import dev.road.map.domain.user.User;
 import dev.road.map.domain.user.UserRepository;
+import dev.road.map.service.FriendService;
 
 @RestController
 public class FriendController {
@@ -32,6 +37,9 @@ public class FriendController {
 	@Autowired
 	FriendRepository friendRepository;
 	
+	@Autowired
+	FriendService friendService;
+	
 	@Value("${frontDomain}")
 	String frontDomain;
 	
@@ -43,66 +51,12 @@ public class FriendController {
 		String email = parseUser.parseEmail(request);
 		User user = userRepository.findByEmail(email);
 
-		// 응답 생성 
-    	JsonObject jsonObject = new JsonObject();
-    	JsonArray jsonArray = new JsonArray();    	
+		JsonObject jsonObject = friendService.friendList(user);
     	
-    	// 친구의 정보들(이메일, 닉네임, 분야)
-//		List<Friend> friendList = friendRepository.selectAllFriends(user);
-//		System.out.println(friendList);
-    	
-    	List<Friend> friends_send = friendRepository.findByUser1AndAcceptAndIsdelete(user, true, false);
-    	List<Friend> friends_recieve = friendRepository.findByUser2AndAcceptAndIsdelete(user, true, false);
-
-    	for(Friend friend_send : friends_send) {
-    		JsonObject jsonObject_inner = new JsonObject();
-
-    		// (본인이 친구 요청, 본인이 user1 = 본인이 user_send_friend)(상대방: user2)
-    		User user_friend = friend_send.getUser2();
-    		String friend_email = user_friend.getEmail();
-    		String friend_nickname = user_friend.getNickname();
-    		Field friend_field = user_friend.getField();
-    		
-    		jsonObject_inner.addProperty("friend_nickname", friend_nickname);
-    		jsonObject_inner.addProperty("friend_email", friend_email);
-    		jsonObject_inner.addProperty("friend_field", friend_field.toString());
-
-    		System.out.println(jsonObject_inner);
-    		jsonArray.add(jsonObject_inner);
-    	}
-    	
-    	for(Friend friend_recieve : friends_recieve) {
-    		JsonObject jsonObject_inner = new JsonObject();
-
-    		// (상대방이 친구 요청, 본인이 user2 = 본인이 user_recieve_friend)(상대방: user1)
-    		User user_friend = friend_recieve.getUser1();
-    		String friend_email = user_friend.getEmail();
-    		String friend_nickname = user_friend.getNickname();
-    		Field friend_field = user_friend.getField();
-    		
-    		jsonObject_inner.addProperty("friend_nickname", friend_nickname);
-    		jsonObject_inner.addProperty("friend_email", friend_email);
-    		jsonObject_inner.addProperty("friend_field", friend_field.toString());    		
-    		
-    		jsonArray.add(jsonObject_inner);
-    	}
-
-    	jsonObject.addProperty("user_email", email);
-    	jsonObject.add("friend_list", jsonArray);
-//		for (User friend_users : friendList) {
-//    		JsonObject jsonObject_inner = new JsonObject();
-//			jsonObject_inner.addProperty("friend_email",friend_users.getEmail());
-//			jsonObject_inner.addProperty("friend_nickname", friend_users.getNickname());
-//			jsonObject_inner.addProperty("friend_field", friend_users.getField().toString());
-//			
-//			// 진도율 임시 생략 
-//		}
-		
-//    	jsonObject.addProperty("user_email", email);
-//    	jsonObject.addProperty("user_nickname", user.getNickname());
-//    	jsonObject.add("friend_list", jsonArray);
-    	
+    	// utf-8설정(닉네임에 한글 들어갈 수도 있으니)
 		return ResponseEntity.ok()
+				.header("Content-Type", "application/xml")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
 				.body(jsonObject.toString());	
@@ -117,21 +71,22 @@ public class FriendController {
 
 	// 설정 
 	// 친구 신청
+    @RequestMapping("/friend/proposal")
 	public ResponseEntity<String> proposalTo(HttpServletRequest request){
 		// 현재 로그인한 유저 
-//		String email = parseUser.parseEmail(request);
-//		User user_send_friend = userRepository.findByEmail(email);
-//		
-//		// 친구 신청할 유저 
-//		String email2 = request.getParameter("proposalTo");
-//		User user_recieve_friend = userRepository.findByEmail(email2);
-//		
-//		Friend friend = Friend.builder()
-//				.user_send_friend(user_send_friend)
-//				.user_recieve_friend(user_recieve_friend)
-//				.build();
-//		
-//		friendRepository.save(friend);
+		String email = parseUser.parseEmail(request);
+		User user_send_friend = userRepository.findByEmail(email);
+		
+		// 친구 신청할 유저 
+		String email2 = request.getParameter("proposalTo");
+		User user_recieve_friend = userRepository.findByEmail(email2);
+		
+		Friend friend = Friend.builder()
+				.user1(user_send_friend)
+				.user2(user_recieve_friend)
+				.build();
+		
+		friendRepository.save(friend);
 		return ResponseEntity.ok().body("proposal success");
 	}
 
