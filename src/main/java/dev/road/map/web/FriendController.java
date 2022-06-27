@@ -67,9 +67,12 @@ public class FriendController {
     		String friend_nickname = user_friend.getNickname();
     		Field friend_field = user_friend.getField();
     		
+    		User friend = userRepository.findByEmail(friend_email);
+    		
     		jsonObject_inner.addProperty("friend_nickname", friend_nickname);
     		jsonObject_inner.addProperty("friend_email", friend_email);
     		jsonObject_inner.addProperty("friend_field", friend_field.toString());
+    		jsonObject_inner.addProperty("friend_progressRate", friend.getProgressRate());  
 
     		System.out.println(jsonObject_inner);
     		jsonArray.add(jsonObject_inner);
@@ -84,27 +87,18 @@ public class FriendController {
     		String friend_nickname = user_friend.getNickname();
     		Field friend_field = user_friend.getField();
     		
+    		User friend = userRepository.findByEmail(friend_email);
+    		
     		jsonObject_inner.addProperty("friend_nickname", friend_nickname);
     		jsonObject_inner.addProperty("friend_email", friend_email);
-    		jsonObject_inner.addProperty("friend_field", friend_field.toString());    		
+    		jsonObject_inner.addProperty("friend_field", friend_field.toString());  
+    		jsonObject_inner.addProperty("friend_progressRate", friend.getProgressRate());  
     		
     		jsonArray.add(jsonObject_inner);
     	}
 
     	jsonObject.addProperty("user_email", email);
     	jsonObject.add("friend_list", jsonArray);
-//		for (User friend_users : friendList) {
-//    		JsonObject jsonObject_inner = new JsonObject();
-//			jsonObject_inner.addProperty("friend_email",friend_users.getEmail());
-//			jsonObject_inner.addProperty("friend_nickname", friend_users.getNickname());
-//			jsonObject_inner.addProperty("friend_field", friend_users.getField().toString());
-//			
-//			// 진도율 임시 생략 
-//		}
-		
-//    	jsonObject.addProperty("user_email", email);
-//    	jsonObject.addProperty("user_nickname", user.getNickname());
-//    	jsonObject.add("friend_list", jsonArray);
     	
     	// utf-8설정(닉네임에 한글 들어갈 수도 있으니)
 		return ResponseEntity.ok()
