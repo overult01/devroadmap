@@ -4,12 +4,16 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.json.UTF8JsonGenerator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -102,7 +106,10 @@ public class FriendController {
 //    	jsonObject.addProperty("user_nickname", user.getNickname());
 //    	jsonObject.add("friend_list", jsonArray);
     	
+    	// utf-8설정(닉네임에 한글 들어갈 수도 있으니)
 		return ResponseEntity.ok()
+				.header("Content-Type", "application/xml")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
 				.body(jsonObject.toString());	
