@@ -71,21 +71,22 @@ public class FriendController {
 
 	// 설정 
 	// 친구 신청
+    @RequestMapping("/friend/proposal")
 	public ResponseEntity<String> proposalTo(HttpServletRequest request){
 		// 현재 로그인한 유저 
-//		String email = parseUser.parseEmail(request);
-//		User user_send_friend = userRepository.findByEmail(email);
-//		
-//		// 친구 신청할 유저 
-//		String email2 = request.getParameter("proposalTo");
-//		User user_recieve_friend = userRepository.findByEmail(email2);
-//		
-//		Friend friend = Friend.builder()
-//				.user_send_friend(user_send_friend)
-//				.user_recieve_friend(user_recieve_friend)
-//				.build();
-//		
-//		friendRepository.save(friend);
+		String email = parseUser.parseEmail(request);
+		User user_send_friend = userRepository.findByEmail(email);
+		
+		// 친구 신청할 유저 
+		String email2 = request.getParameter("proposalTo");
+		User user_recieve_friend = userRepository.findByEmail(email2);
+		
+		Friend friend = Friend.builder()
+				.user1(user_send_friend)
+				.user2(user_recieve_friend)
+				.build();
+		
+		friendRepository.save(friend);
 		return ResponseEntity.ok().body("proposal success");
 	}
 
