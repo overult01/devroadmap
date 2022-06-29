@@ -20,7 +20,9 @@ public class ParseUser {
 	
 	// 현재 로그인한 유저의 이메일(아이디 대체)
 	public String parseEmail(HttpServletRequest request) {
-       	String bearerToken = request.getHeader("Authorization");
+       	String bearerToken = request.getParameter("Authorization");
+
+//		String bearerToken = request.getHeader("Authorization");
     	String token = null;
     	if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			token = bearerToken.substring(7);
