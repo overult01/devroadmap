@@ -75,4 +75,39 @@ public class FriendService {
     	
     	return jsonObject;
 	}
+	
+	public JsonObject proposalFrom(User user) {
+		// 응답 생성 
+    	JsonObject jsonObject = new JsonObject();
+    	JsonArray jsonArray = new JsonArray();    	
+    	
+		// 받은 친구 신청 리스트(본인 수신 & 삭제 null & "수락 null")
+		// 받은 친구 신청 리스트
+		List<Friend> proposalFrom = friendRepository.findByUser2AndAcceptAndIsdelete(user, null, null);
+
+    	for(Friend proposalFriend : proposalFrom) {
+    		JsonObject jsonObject_inner = new JsonObject();
+
+    		// (상대방이 친구 요청: user1 = user_send_friend)(본인: user2)
+    		User user_friend = proposalFriend.getUser1();
+    		String friend_email = user_friend.getEmail();
+    		String friend_nickname = user_friend.getNickname();
+    		Field friend_field = user_friend.getField();
+    		
+    		User friend = userRepository.findByEmail(friend_email);
+    		
+    		jsonObject_inner.addProperty("friend_nickname", friend_nickname);
+    		jsonObject_inner.addProperty("friend_email", friend_email);
+    		jsonObject_inner.addProperty("friend_field", friend_field.toString());
+    		jsonObject_inner.addProperty("friend_progressRate", friend.getProgressRate());  
+
+    		System.out.println(jsonObject_inner);
+    		jsonArray.add(jsonObject_inner);
+    	}
+
+    	jsonObject.addProperty("user_email", user.getEmail());
+    	jsonObject.add("proposal_friend_list", jsonArray);
+    	
+    	return jsonObject;
+	}
 }

@@ -71,7 +71,7 @@ public class FriendController {
 
 	// 설정 
 	// 친구 신청
-    @RequestMapping("/friend/proposal")
+    @RequestMapping("/friend/proposal/send")
 	public ResponseEntity<String> proposalTo(HttpServletRequest request){
 		// 현재 로그인한 유저 
 		String email = parseUser.parseEmail(request);
@@ -90,73 +90,86 @@ public class FriendController {
 		return ResponseEntity.ok().body("proposal success");
 	}
 
-	// 받은 친구 신청 수락/거절 
-	public ResponseEntity<String> acceptOrNot(HttpServletRequest request){
-//		// 현재 로그인한 유저 
-//		String email = parseUser.parseEmail(request);
-//		User user = userRepository.findByEmail(email);
-//		
-//		// 받은 친구 신청 리스트
-//		List<Friend> proposalFrom = friendRepository.selectAllPropsalFrom(user);
-//		
-//		// 조회. 리스트를 어떻게 전달해주어야 할지 고민 
-//		for(Friend friend : proposalFrom) {
-//			User user1 = friend.getUser1();
-//			String nickname = user1.getNickname();
-//			String email_f1 = user1.getEmail();
-//			Field field = user1.getField();
-//			String profile = user1.getProfile();
-//
-//			// 수락 or 거절
-//			String acceptOrNot = request.getParameter("acceptOrNot");
-//			if (acceptOrNot.equals("TRUE")) {
-//				friend.setAccept(true);
-//			}
-//			else {
-//				friend.setAccept(false);
-//			}
-//		}
-//		
-		return ResponseEntity.ok().body("acceptOrNot success");
+	// 받은 친구 신청 리스트 
+    @RequestMapping("/friend/proposal/recieve")
+	public ResponseEntity<String> proposalFrom(HttpServletRequest request){
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+		
+		JsonObject jsonObject = friendService.proposalFrom(user);
+		
+		// 조회. 받은 친구 신청
+		return ResponseEntity.ok()
+				.header("Content-Type", "application/xml")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());	
 	}
 
+	// 받은 친구 신청 수락/거절 
+    @RequestMapping("/friend/proposal/acceptornot")
+	public ResponseEntity<String> acceptOrNot(HttpServletRequest request){
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+		
+		String friendNickname = request.getParameter("friendnickname");
+		String acceptOrNot = request.getParameter("acceptornot"); // true / false
+		Boolean acceptBoolean = Boolean.getBoolean(acceptOrNot);
+		
+		User friend_user = userRepository.findByNickname(friendNickname);
+		
+		Friend friend = friendRepository.findByUser1AndUser2(friend_user, user);
+		friend.setAccept(acceptBoolean);
+		
+		friendRepository.save(friend);
+		
+		return ResponseEntity.ok()
+				.header("Content-Type", "application/xml")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("ok");	
+	}
+    
 	// 친구 끊기
+    @RequestMapping("/friend/disconnect")
 	public ResponseEntity<String> disconnect(HttpServletRequest request){
-//		// 현재 로그인한 유저 
-//		String email = parseUser.parseEmail(request);
-//		User user = userRepository.findByEmail(email);
-//
-//		// 끊을 친구 이메일
-//		String friend_email = request.getParameter("friend");
-//		User friend_user = userRepository.findByEmail(friend_email);
-//		
-//		Friend friend = Friend.builder()
-//			.user1(friend_user)
-//			.user2(friend_user)
-//			.build();
-//		friend.setIsdelete(true);
-//		
-//		// 변경사항 저장
-//		friendRepository.save(friend);
+		// 현재 로그인한 유저 
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+
+		// 끊을 친구 닉네임 
+		String friendNickname = request.getParameter("friendnickname");
+		User friend_user = userRepository.findByNickname(friendNickname);
+		
+		Friend friend = friendRepository.findByUser1AndUser2(friend_user, user);
+		friend.setIsdelete(true);
+		
+		// 변경사항 저장
+		friendRepository.save(friend);
 		
 		return ResponseEntity.ok().body("disconnect success");
 	}
 	
 	// 다른 정원 둘러보기 on/off
+    @RequestMapping("/friend/matchornot")
 	public ResponseEntity<String> matchOrNot(HttpServletRequest request){
 		// 현재 로그인한 유저 
-//		String email = parseUser.parseEmail(request);
-//		User user = userRepository.findByEmail(email);
-//		
-//		if (user.getUnmatching().booleanValue()==true) {
-//			user.setUnmatching(false);			
-//		}
-//		else if (user.getUnmatching().booleanValue()==false) {
-//			user.setUnmatching(true);			
-//		}
-//		
-//		// 변경사항 저장		
-//		userRepository.save(user);
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+		
+		if (user.getUnmatching().booleanValue()==true) {
+			user.setUnmatching(false);			
+		}
+		else if (user.getUnmatching().booleanValue()==false) {
+			user.setUnmatching(true);			
+		}
+		
+		// 변경사항 저장		
+		userRepository.save(user);
 		return ResponseEntity.ok().body("matchOrNot success");
 
 	}
