@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import dev.road.map.domain.user.UserRepository;
 import dev.road.map.service.MailService;
 import dev.road.map.service.UserService;
 
+// @CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*") // 추가
 @RestController
 public class IndexController {
 

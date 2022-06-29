@@ -1,9 +1,12 @@
 package dev.road.map.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,13 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import dev.road.map.config.CorsConfig;
 import dev.road.map.domain.user.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@SuppressWarnings("deprecation")
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity // 스프링 시큐리티 필터를 스프링 필터체인에 등록
-//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // secured 어노테이션 활성화, preAuthorize 어노테이션 활성화
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // secured 어노테이션 활성화, preAuthorize 어노테이션 활성화
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
@@ -28,6 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
 	private CorsConfig corsConfig;
 
+//    @Autowired
+//    CorsFilter corsFilter;
+    
+	@Value("${frontDomain}")
+	String frontDomain;
+    
 	@Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -37,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.addFilter(corsConfig.corsFilter());
+//		http.addFilter(corsFilter);
+
 //		.addFilterBefore(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
 		http.csrf().disable()
@@ -44,21 +56,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // STATELESS: 세션 미사용 설정 
 		.and()
+		.cors()
 		
+		.and()
 		.formLogin().disable() // formLogin 미사용
 		.httpBasic().disable(); // 기본 로그인 방식 미사용
         
-//		http.formLogin()
-//		.loginPage("http://localhost:3000/login")
-//        .defaultSuccessUrl("http://localhost:3000/login/result");
+		http.formLogin()
+		.loginPage(frontDomain + "/signin")
+        .defaultSuccessUrl(frontDomain);
 		// jwt사용시 여기까지는 기본 
 
-//		http.authorizeRequests().antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/login/**", "/static/**", "/logout/**").permitAll()
-//				.antMatchers("/user/**").access("hasRole('ROLE_USER')") // 로그인한 user만 접근 가능
-//				.antMatchers("/mail**").permitAll()
-//				.anyRequest().authenticated();
+		http.authorizeRequests()
+			.antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+			.antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/static/**", "/logout/**").permitAll()
+			.antMatchers("/user/details", "/mail**").permitAll()
+			.anyRequest().authenticated();
 
-		http.logout().logoutSuccessUrl("/");
+//		http.logout().logoutSuccessUrl("/");
 
 //		http.oauth2Login().defaultSuccessUrl("http://localhost:3000/") // oauth2 로그인
 //				.userInfoEndpoint() // oauth2Login 성공 이후의 설정을 시작

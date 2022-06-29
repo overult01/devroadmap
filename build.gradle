@@ -64,6 +64,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
+	
+	testImplementation 'org.apache.httpcomponents:httpclient'
 }
 
 // tasks.withType(JavaCompile) {
