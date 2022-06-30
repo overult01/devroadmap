@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
 			.antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/static/**", "/logout/**").permitAll()
-			.antMatchers("/user/details", "/mail**").permitAll()
+			.antMatchers("/user/details", "/mail**", "/history/**").permitAll()
 			.anyRequest().authenticated();
 
 //		http.logout().logoutSuccessUrl("/");

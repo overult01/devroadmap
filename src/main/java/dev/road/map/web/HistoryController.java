@@ -89,6 +89,7 @@ public class HistoryController {
     @RequestMapping("/history")
     public ResponseEntity<?> completeHistory (HttpServletRequest request){
     	
+    	System.out.println("history");
     	// 현재 로그인한 유저 
     	String email = parseUser.parseEmail(request);
     	User user = userRepository.findByEmail(email);
