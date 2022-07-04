@@ -102,23 +102,4 @@ public class HistoryController {
 				.header("Access-Control-Allow-Credentials", "true")
 				.body(jsonObject.toString());
     }
-    
-    // 로그인한 유저의 과목별 완료여부 조회
-    @RequestMapping("/history/subject/compelete/check")
-    public ResponseEntity<?> SubjectCompleteCheck (HttpServletRequest request, String object){
-    	
-    	// 현재 로그인한 유저 
-    	String email = parseUser.parseEmail(request);
-    	User user = userRepository.findByEmail(email);
-
-		// 파라미터로 전달받은 String 값을 int로 형변환
-		int subject = Integer.parseInt(object);
-
-		JsonObject jsonObject = historyService.SubjectCompleteCheck(user, subject);
-		
-		return ResponseEntity.ok()
-				.header("Access-Control-Allow-Origin", frontDomain)
-				.header("Access-Control-Allow-Credentials", "true")
-				.body(jsonObject.toString());
-    }
 }
