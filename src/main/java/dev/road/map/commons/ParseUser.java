@@ -28,8 +28,16 @@ public class ParseUser {
 			token = bearerToken.substring(7);
 			System.out.println("token: " + token);
     	}
-    	String email = tokenProvider.verifyTokenAndGetUserEmail(token);
-    	System.out.println(email);
+
+		// preflight 요청일경우 jwt 미인증
+		if (request.getMethod().equals("OPTIONS")) {
+			System.out.println("preflight request");
+			return "preflight request";
+		}
+
+		// preflight 요청 아닐 경우 jwt 인증
+		String email = tokenProvider.verifyTokenAndGetUserEmail(token);
+		System.out.println(email);
 		return email;
 	}
 			

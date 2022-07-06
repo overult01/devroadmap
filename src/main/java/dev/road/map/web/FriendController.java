@@ -55,7 +55,7 @@ public class FriendController {
     	
     	// utf-8설정(닉네임에 한글 들어갈 수도 있으니)
 		return ResponseEntity.ok()
-				.header("Content-Type", "application/xml")
+				.header("Content-Type", "application/json")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
