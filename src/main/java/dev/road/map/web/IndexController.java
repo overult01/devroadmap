@@ -26,7 +26,6 @@ import dev.road.map.domain.user.UserRepository;
 import dev.road.map.service.MailService;
 import dev.road.map.service.UserService;
 
-// @CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*") // 추가
 @RestController
 public class IndexController {
 
@@ -51,7 +50,7 @@ public class IndexController {
 	@Value("${frontDomain}")
 	String frontDomain;
 
-	// 닉네임 중복확인(비동기) - 회원 가입시
+	// 닉네임 중복확인 - 회원 가입시
     @RequestMapping("/signup/nickname/")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
     	
@@ -70,7 +69,7 @@ public class IndexController {
 				.body("fail");
     }
     	
-	// 이메일 인증
+	// 이메일 인증 발송
     @RequestMapping("/signup/mail")
     public ResponseEntity<String> signupMail(String email, HttpServletRequest request) {
 
@@ -105,7 +104,7 @@ public class IndexController {
 		}
     }
 
-    // 메일 인증 확인(사용자가 클릭)
+    // 메일 인증 확인(사용자가 메일 내 인증 링크 클릭)
     @RequestMapping("/signup/mail/confirm")
     public ResponseEntity<?> comfirmMail(String email, String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		System.out.println("인증중");
