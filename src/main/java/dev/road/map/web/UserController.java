@@ -66,25 +66,42 @@ public class UserController {
 		
 	// 닉네임 중복확인(비동기) - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
-    public int nicknamecheck(HttpServletRequest request, String nickname){
-    	// 현재 로그인한 유저 
+    public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
+    	// 현재 로그인한 유저
+		if ("preflight request".equals(parseUser.parseEmail(request))) {
+			return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+					.header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me")
+					.header("Access-Control-Max-Age","3600")
+					.body("preflight request");
+		}
     	String email = parseUser.parseEmail(request);
     	User user = userRepository.findByEmail(email);
     	String existNick = user.getNickname();
     	System.out.println(existNick);
-    	// 사용가능한 닉네임일 때만 ok 반환
+
+		JsonObject jsonObject = new JsonObject();
+		String result = "duplicated";
+		jsonObject.addProperty("email", email);
+
+		// 사용가능한 닉네임일 때만 ok 반환
     	if (existNick == nickname || userRepository.findByNickname(nickname) == null) {
-    		return HttpServletResponse.SC_OK; // 200
+			result = "ok";
 		}
-		return HttpServletResponse.SC_BAD_REQUEST; // 400
+		return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());
     }
     
     // 회원 정보 수정
-    @RequestMapping("/edit/userdetatils")
+    @RequestMapping("/edit/userdetails")
     public ResponseEntity<String> edit(HttpServletRequest request, MultipartFile profile){
     	// 닉네임(중복확인 먼저 해야 수정 가능. 프론트단에서 확인)
     	if (userService.edit(request, profile) != null) {
-    		return ResponseEntity.ok().body("edit success");
+			ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
+					.header("Access-Control-Allow-Credentials", "true")
+					.body("edit success");
 		};
     	
 		return ResponseEntity.badRequest().body("edit failed");
