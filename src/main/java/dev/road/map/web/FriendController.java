@@ -176,8 +176,8 @@ public class FriendController {
 
 	// 정원사 검색(닉네임 기반, unmatching 인 유저도 검색 불가)
 	public ResponseEntity<?> search(HttpServletRequest request){
-//		String search_nick = request.getParameter("searchNickname");
-//		User user = friendRepository.search(search_nick);
+		String search_nick = request.getParameter("searchnickname");
+		User user = friendRepository.search(search_nick);
 		return ResponseEntity.ok().body("ok");
 	}
 }
