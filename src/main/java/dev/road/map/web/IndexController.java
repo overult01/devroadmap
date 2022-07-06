@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class IndexController {
 
 	@Value("${frontDomain}")
 	String frontDomain;
-    
+
 	// 닉네임 중복확인(비동기) - 회원 가입시
     @RequestMapping("/signup/nickname/")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
@@ -103,9 +105,9 @@ public class IndexController {
 		}
     }
 
-    // 인증 확인(사용자가 클릭) 
+    // 메일 인증 확인(사용자가 클릭)
     @RequestMapping("/signup/mail/confirm")
-    public ResponseEntity<String> comfirmMail(String email, String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public ResponseEntity<?> comfirmMail(String email, String authKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		System.out.println("인증중");
 		// AuthKey가 일치하면 Role 을 Mail로 업그레이드 
 		User user = userRepository.findByEmail(email);
@@ -115,13 +117,19 @@ public class IndexController {
 		
 		// 변화된 사항 저장(update)
 		userRepository.save(user);
+
+
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("email", email);
+
 		// 회원가입 페이지로 리디이렉트
 		String redirect_uri= frontDomain + "/signup";
 		response.sendRedirect(redirect_uri);
 		return ResponseEntity.ok()
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
-				.body("signup2");
+				.body(jsonObject.toString());
+//				.body("signup2");
     }
     
 	// 가입
