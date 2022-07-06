@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import dev.road.map.config.CorsConfig;
 import dev.road.map.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsUtils;
 
 @SuppressWarnings("deprecation")
 @RequiredArgsConstructor
@@ -68,10 +69,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// jwt사용시 여기까지는 기본 
 
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+			.antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll() // preflight
 			.antMatchers("/jwt/**", "/signup/**", "/signin/**", "/", "/main/**", "/static/**", "/logout/**").permitAll()
-			.antMatchers("/user/details", "/mail**", "/history/**").permitAll()
+//			.antMatchers("/user/details/**", "/mail/**", "/history/**", "/friend/**", "").permitAll()
+			.antMatchers(HttpMethod.GET, "/**/*").permitAll()
+				.antMatchers(HttpMethod.POST, "/**/*").permitAll()
 			.anyRequest().authenticated();
+			// preflight
+//			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
 
 //		http.logout().logoutSuccessUrl("/");
 
