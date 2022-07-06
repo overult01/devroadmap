@@ -40,7 +40,7 @@ public class UserController {
 	@Value("${frontDomain}")
 	String frontDomain;
 	
-//	현재 로그인한 사용자 정보 불러오기(비동기) - 클라이언트 측에서 jwt를 전달해주면, 복호화하여 사용자 정보(이메일, 닉네임, 프로필 사진, 필드-프론트/백) 전달
+//	현재 로그인한 사용자 정보 불러오기 - 클라이언트 측에서 jwt를 전달해주면, 복호화하여 사용자 정보(이메일, 닉네임, 프로필 사진, 필드-프론트/백) 전달
 	@RequestMapping("/user/details")
 	public ResponseEntity<?> userDetails(HttpServletRequest request) {
 		
@@ -52,7 +52,6 @@ public class UserController {
     	Field field = user.getField();
     	
     	JsonObject jsonObject = new JsonObject();
-    	
     	jsonObject.addProperty("email", email);
     	jsonObject.addProperty("nickname", nickname);
     	jsonObject.addProperty("profile", profile);
@@ -63,8 +62,29 @@ public class UserController {
 				.header("Access-Control-Allow-Credentials", "true")
 				.body(jsonObject.toString());
 	}
-		
-	// 닉네임 중복확인(비동기) - 회원 정보 수정시
+
+	// 진도율 단독 조회
+	@RequestMapping("/progressrate")
+	public ResponseEntity<?> progressrate(HttpServletRequest request) {
+
+		// 현재 로그인한 유저
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+
+		// % 단위로 표시된 진도율
+		int progressRate = user.getProgressRate();
+
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("progressRate", progressRate);
+
+		return ResponseEntity.ok().header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());
+	}
+
+
+
+	// 닉네임 중복확인 - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
     	// 현재 로그인한 유저
