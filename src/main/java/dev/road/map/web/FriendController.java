@@ -79,11 +79,11 @@ public class FriendController {
 		
 		// 친구 신청할 유저 
 		String email2 = request.getParameter("proposalTo");
-		User user_recieve_friend = userRepository.findByEmail(email2);
+		User user_receive_friend = userRepository.findByEmail(email2);
 		
 		Friend friend = Friend.builder()
 				.user1(user_send_friend)
-				.user2(user_recieve_friend)
+				.user2(user_receive_friend)
 				.build();
 		
 		friendRepository.save(friend);
@@ -91,7 +91,7 @@ public class FriendController {
 	}
 
 	// 받은 친구 신청 리스트 
-    @RequestMapping("/friend/proposal/recieve")
+    @RequestMapping("/friend/proposal/receive")
 	public ResponseEntity<String> proposalFrom(HttpServletRequest request){
 		// 현재 로그인한 유저 
 		String email = parseUser.parseEmail(request);
@@ -176,8 +176,8 @@ public class FriendController {
 
 	// 정원사 검색(닉네임 기반, unmatching 인 유저도 검색 불가)
 	public ResponseEntity<?> search(HttpServletRequest request){
-//		String search_nick = request.getParameter("searchNickname");
-//		User user = friendRepository.search(search_nick);
+		String search_nick = request.getParameter("searchnickname");
+		User user = friendRepository.search(search_nick);
 		return ResponseEntity.ok().body("ok");
 	}
 }

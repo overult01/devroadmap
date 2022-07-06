@@ -29,7 +29,7 @@ public class FriendService {
     	JsonArray jsonArray = new JsonArray();    	
     	
     	List<Friend> friends_send = friendRepository.findByUser1AndAcceptAndIsdelete(user, true, false);
-    	List<Friend> friends_recieve = friendRepository.findByUser2AndAcceptAndIsdelete(user, true, false);
+    	List<Friend> friends_receive = friendRepository.findByUser2AndAcceptAndIsdelete(user, true, false);
 
     	for(Friend friend_send : friends_send) {
     		JsonObject jsonObject_inner = new JsonObject();
@@ -51,11 +51,11 @@ public class FriendService {
     		jsonArray.add(jsonObject_inner);
     	}
     	
-    	for(Friend friend_recieve : friends_recieve) {
+    	for(Friend friend_receive : friends_receive) {
     		JsonObject jsonObject_inner = new JsonObject();
 
-    		// (상대방이 친구 요청, 본인이 user2 = 본인이 user_recieve_friend)(상대방: user1)
-    		User user_friend = friend_recieve.getUser1();
+    		// (상대방이 친구 요청, 본인이 user2 = 본인이 user_receive_friend)(상대방: user1)
+    		User user_friend = friend_receive.getUser1();
     		String friend_email = user_friend.getEmail();
     		String friend_nickname = user_friend.getNickname();
     		Field friend_field = user_friend.getField();
