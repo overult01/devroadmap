@@ -149,6 +149,8 @@ public class IndexController {
 				user.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
 				user.setRole(Role.USER);
 				user.setNickname(nickname);
+				user.setUnmatching(false);
+				user.setIsdelete(false);
 				if (fieldStr.equals("front")) {
 					user.setField(Field.front);
 				}
