@@ -25,6 +25,4 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 	// 나한테 온 친구신청. 수락 or 거절()시 user1, user2로 찾기
 	Friend findByUser1AndUser2(User user1, User user2);
 
-	// 정원사 검색(닉네임 기반)
-	Friend findByNicknameAndUnmatchingAndIsdelete(String search_nick, Boolean unmatching, Boolean isDelete);
 }

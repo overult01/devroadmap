@@ -12,4 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	public User findByEmail(String email);
 	
 	public User save(User user);
+
+    // 정원사 검색(닉네임 기반)
+    User findByNicknameAndUnmatchingAndIsdelete(String searchNick, Boolean unmatching, Boolean isDelete);
+
 }

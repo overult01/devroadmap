@@ -55,7 +55,7 @@ public class FriendController {
     	
     	// utf-8설정(닉네임에 한글 들어갈 수도 있으니)
 		return ResponseEntity.ok()
-				.header("Content-Type", "application/json")
+				.header("Content-Type", "application/xml")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
@@ -87,7 +87,11 @@ public class FriendController {
 				.build();
 		
 		friendRepository.save(friend);
-		return ResponseEntity.ok().body("proposal success");
+
+		return ResponseEntity.ok()
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("ok");
 	}
 
 	// 받은 친구 신청 리스트 
@@ -150,8 +154,11 @@ public class FriendController {
 		
 		// 변경사항 저장
 		friendRepository.save(friend);
-		
-		return ResponseEntity.ok().body("disconnect success");
+
+		return ResponseEntity.ok()
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("ok");
 	}
 	
 	// 다른 정원 둘러보기 on/off
@@ -170,14 +177,42 @@ public class FriendController {
 		
 		// 변경사항 저장		
 		userRepository.save(user);
-		return ResponseEntity.ok().body("matchOrNot success");
-
+		return ResponseEntity.ok()
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body("ok");
 	}
 
-	// 정원사 검색(닉네임 기반, unmatching 인 유저도 검색 불가)
+	// 정원사 검색(닉네임 기반 검색, unmatching, isdelete가 true 인 유저는 검색 불가)
+	@RequestMapping("/friend/search")
 	public ResponseEntity<?> search(HttpServletRequest request){
-		String search_nick = request.getParameter("searchnickname");
-		User user = friendRepository.search(search_nick);
-		return ResponseEntity.ok().body("ok");
+		String searchNick = request.getParameter("searchnickname");
+
+		User searchUser = userRepository.findByNicknameAndUnmatchingAndIsdelete(searchNick, false, false);
+
+		System.out.println(searchUser);
+
+		JsonObject jsonObject = new JsonObject();
+		// 검색한 닉네임
+		jsonObject.addProperty("search_user_nickname", searchNick);
+
+		// 닉네임으로 검색한 유저가 있으면
+		if (searchUser != null) {
+			jsonObject.addProperty("result", "ok");
+			jsonObject.addProperty("search_user_email", searchUser.getEmail());
+			jsonObject.addProperty("search_user_field", searchUser.getField().toString());
+			jsonObject.addProperty("search_user_progressrate", searchUser.getProgressRate());
+			jsonObject.addProperty("search_user_joindate", searchUser.getJoindate().toString());
+		}
+		else {
+			jsonObject.addProperty("result", "not exist nickname");
+		}
+
+		return ResponseEntity.ok()
+				.header("Content-Type", "application/xml")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.header("Access-Control-Allow-Origin", frontDomain)
+				.header("Access-Control-Allow-Credentials", "true")
+				.body(jsonObject.toString());
 	}
 }
