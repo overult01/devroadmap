@@ -117,7 +117,6 @@ public class IndexController {
 		// 변화된 사항 저장(update)
 		userRepository.save(user);
 
-
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("email", email);
 
