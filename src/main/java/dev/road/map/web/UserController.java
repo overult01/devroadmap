@@ -82,8 +82,6 @@ public class UserController {
 				.body(jsonObject.toString());
 	}
 
-
-
 	// 닉네임 중복확인 - 회원 정보 수정시
     @RequestMapping("/edit/nickname/check")
     public ResponseEntity<?> nicknamecheck(HttpServletRequest request, String nickname){
