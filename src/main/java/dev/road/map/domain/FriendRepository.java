@@ -22,7 +22,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long>{
 	// 사용용도: insert: 친구 신청, update: 수락 or 거절(), 친구 끊기
 	public Friend save(Friend friend);
 	
-	// 나한테 온 친구신청. 수락 or 거절()시 user1, user2로 찾기
+	// 사용용도: 나한테 온 친구신청. 수락 or 거절()시 user1, user2로 찾기 / 친구여부 or 친구 신청여부 확인2(닉네임 검색시)
 	Friend findByUser1AndUser2(User user1, User user2);
-
 }

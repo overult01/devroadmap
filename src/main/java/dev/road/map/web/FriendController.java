@@ -184,10 +184,16 @@ public class FriendController {
 				.body("ok");
 	}
 
-	// 정원사 검색(닉네임 기반 검색
+	// 정원사 검색(닉네임 기반 검색)
 	// (unmatching, isdelete가 true 인 유저는 검색 불가)
 	@RequestMapping("/friend/search")
 	public ResponseEntity<?> search(HttpServletRequest request){
+
+		// 현재 로그인한 유저
+		String email = parseUser.parseEmail(request);
+		User user = userRepository.findByEmail(email);
+
+		// 검색한 유저
 		String searchNick = request.getParameter("searchnickname");
 
 		User searchUser = userRepository.findByNicknameAndUnmatchingAndIsdelete(searchNick, false, false);
@@ -195,8 +201,38 @@ public class FriendController {
 		System.out.println(searchUser);
 
 		JsonObject jsonObject = new JsonObject();
+
 		// 검색한 닉네임
 		jsonObject.addProperty("search_user_nickname", searchNick);
+
+		// 기존 친구인지 or 친구신청했었는지 확인 (둘다 아니면 둘다 null)
+		Friend friend1 = friendRepository.findByUser1AndUser2(user, searchUser);
+		Friend friend2 = friendRepository.findByUser1AndUser2(searchUser, user);
+
+		String friendornot;
+
+		// 친구 신청 이력이 없으면
+		if (friend1==null && friend2==null) {
+			friendornot = "not friend";
+		}
+		// 친구 신청 이력이 있으면
+		else {
+			// 수락 && 삭제x면
+			if ((friend1.getAccept()==true && friend1.getIsdelete()==false) || (friend2.getAccept()==true && friend2.getIsdelete()==false)) {
+				friendornot = "already friend";
+			}
+			// 수락 && 삭제o면
+			else if ((friend1.getAccept()==true && friend1.getIsdelete()==true) || (friend2.getAccept()==true && friend2.getIsdelete()==true)) {
+				friendornot = "not friend";
+			}
+			// 친구 신청만 된 상태(수락x)
+			else if (friend1.getAccept() == false){
+				friendornot = "already friend proposal";
+			}
+			else {
+				friendornot = "not friend";
+			}
+		}
 
 		// 닉네임으로 검색한 유저가 있으면
 		if (searchUser != null) {
@@ -205,6 +241,7 @@ public class FriendController {
 			jsonObject.addProperty("search_user_field", searchUser.getField().toString());
 			jsonObject.addProperty("search_user_progressrate", searchUser.getProgressRate());
 			jsonObject.addProperty("search_user_joindate", searchUser.getJoindate().toString());
+			jsonObject.addProperty("search_user_friendornot", friendornot);
 		}
 		else {
 			jsonObject.addProperty("result", "not exist nickname");
