@@ -71,7 +71,7 @@ public class FriendController {
 //	}
 
 	// 설정 
-	// 친구 신청
+	// 친구 신청(친구 삭제됐을 때 재신청가능)
     @RequestMapping("/friend/proposal/send")
 	public ResponseEntity<String> proposalTo(HttpServletRequest request){
 		// 현재 로그인한 유저 
@@ -85,6 +85,8 @@ public class FriendController {
 		Friend friend = Friend.builder()
 				.user1(user_send_friend)
 				.user2(user_receive_friend)
+				.isdelete(false)
+				.accept(false)
 				.build();
 		
 		friendRepository.save(friend);

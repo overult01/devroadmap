@@ -49,8 +49,10 @@ public class Friend {
     private Boolean isdelete;
     
     @Builder
-    public Friend(User user1, User user2) {
+    public Friend(User user1, User user2, Boolean isdelete, Boolean accept) {
     	this.user1 = user1;
     	this.user2 = user2;
+		this.isdelete = isdelete;
+		this.accept = accept;
     }
 }
