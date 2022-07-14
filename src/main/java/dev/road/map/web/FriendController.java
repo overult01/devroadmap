@@ -220,81 +220,81 @@ public class FriendController {
 
 	// (랜덤매칭)다른 정원 둘러보기를 통해, 진도율이 유사한 다른 사용자를 프론트엔드, 백엔드1명씩 정해진 주기에 따라 추천
 	// (unmatching, isdelete가 true 인 유저는 검색 불가)
-	@RequestMapping("/friend/match")
-	public ResponseEntity<?> matching(HttpServletRequest request) {
-
-		// 현재 로그인한 유저
-		String email = parseUser.parseEmail(request);
-		User user = userRepository.findByEmail(email);
-
-		Random random = new Random();
-
-		float progressRate = user.getProgressRate()/10;
-		// Math.round(double/float 숫자): 소수점 첫째자리에서 반올림하여 정수만든다.
-		int calProgressRate = Math.round(progressRate) * 10; // 첫번째 정수자리에서 반올림하여 0 ~ 100까지 10의 배수로 만든다.
-
-		// 매칭된 유저
-		User matchUserBack = null;
-
-		// back 매칭(진도율 기반)
-		List<User> progressMatchBack;
-
-		while (calProgressRate<=100) { // 100까지만 찾기
-			progressMatchBack = userRepository.findByProgressRateBetweenAndFieldUnmatchingAndIsdelete(calProgressRate, calProgressRate+10, Field.back,  false, false);
-			if (progressMatchBack != null){ // 매칭결과가 있으면 1명만 선택
-				int cntBack = progressMatchBack.size();
-				matchUserBack = progressMatchBack.get(random.nextInt(cntBack)); // 0~size-1에서 랜덤 정수 선택. 이 정수에 해당하는 인덱스를 가진 유저 선택.
-				break;
-			}
-			// 매칭결과 없으면 calProgressRate+10 해서 범위를 달리해서 재검색
-			calProgressRate += 10;
-		}
-
-		// 매칭된 유저
-		User matchUserFront = null;
-
-		// front 매칭(진도율 기반)
-		List<User> progressMatchFront;
-
-		while (calProgressRate<=100) { // 100까지만 찾기
-			progressMatchFront = userRepository.findByProgressRateBetweenAndFieldUnmatchingAndIsdelete(calProgressRate, calProgressRate+10, Field.front,  false, false);
-			if (progressMatchFront != null){ // 매칭결과가 있으면 1명만 선택
-				int cntFront = progressMatchFront.size();
-				matchUserFront = progressMatchFront.get(random.nextInt(cntFront)); // 0~size-1에서 랜덤 정수 선택. 이 정수에 해당하는 인덱스를 가진 유저 선택.
-				break;
-			}
-			// 매칭결과 없으면 calProgressRate+10 해서 범위를 달리해서 재검색
-			calProgressRate += 10;
-		}
-
-		JsonObject jsonObject = new JsonObject();
-		JsonArray jsonArray = new JsonArray();
-
-		// 매칭된 유저가 있으면
-		if (matchUserBack != null) {
-			JsonObject inner_jsonObject = new JsonObject();
-
-			inner_jsonObject.addProperty("result", "ok");
-			inner_jsonObject.addProperty("match_user_back_email", matchUserBack.getEmail());
-			inner_jsonObject.addProperty("match_user_back_email", matchUserBack.getEmail());
-		} else {
-//			inner_jsonObject.addProperty("result", "not exist nickname");
-		}
-
-		if (matchUserFront != null) {
-			JsonObject inner_jsonObject = new JsonObject();
-
-			inner_jsonObject.addProperty("result", "ok");
-			inner_jsonObject.addProperty("match_user_front_email", matchUserFront.getEmail());
-			inner_jsonObject.addProperty("match_user_front_email", matchUserFront.getEmail());		} else {
-//			inner_jsonObject.addProperty("result", "not exist nickname");
-		}
-
-		return ResponseEntity.ok()
-				.header("Content-Type", "application/xml")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.header("Access-Control-Allow-Origin", frontDomain)
-				.header("Access-Control-Allow-Credentials", "true")
-				.body(jsonObject.toString());
-	}
+//	@RequestMapping("/friend/match")
+//	public ResponseEntity<?> matching(HttpServletRequest request) {
+//
+//		// 현재 로그인한 유저
+//		String email = parseUser.parseEmail(request);
+//		User user = userRepository.findByEmail(email);
+//
+//		Random random = new Random();
+//
+//		float progressRate = user.getProgressRate()/10;
+//		// Math.round(double/float 숫자): 소수점 첫째자리에서 반올림하여 정수만든다.
+//		int calProgressRate = Math.round(progressRate) * 10; // 첫번째 정수자리에서 반올림하여 0 ~ 100까지 10의 배수로 만든다.
+//
+//		// 매칭된 유저
+//		User matchUserBack = null;
+//
+//		// back 매칭(진도율 기반)
+//		List<User> progressMatchBack;
+//
+//		while (calProgressRate<=100) { // 100까지만 찾기
+//			progressMatchBack = userRepository.findByProgressRateBetweenAndFieldUnmatchingAndIsdelete(calProgressRate, calProgressRate+10, Field.back,  false, false);
+//			if (progressMatchBack != null){ // 매칭결과가 있으면 1명만 선택
+//				int cntBack = progressMatchBack.size();
+//				matchUserBack = progressMatchBack.get(random.nextInt(cntBack)); // 0~size-1에서 랜덤 정수 선택. 이 정수에 해당하는 인덱스를 가진 유저 선택.
+//				break;
+//			}
+//			// 매칭결과 없으면 calProgressRate+10 해서 범위를 달리해서 재검색
+//			calProgressRate += 10;
+//		}
+//
+//		// 매칭된 유저
+//		User matchUserFront = null;
+//
+//		// front 매칭(진도율 기반)
+//		List<User> progressMatchFront;
+//
+//		while (calProgressRate<=100) { // 100까지만 찾기
+//			progressMatchFront = userRepository.findByProgressRateBetweenAndFieldUnmatchingAndIsdelete(calProgressRate, calProgressRate+10, Field.front,  false, false);
+//			if (progressMatchFront != null){ // 매칭결과가 있으면 1명만 선택
+//				int cntFront = progressMatchFront.size();
+//				matchUserFront = progressMatchFront.get(random.nextInt(cntFront)); // 0~size-1에서 랜덤 정수 선택. 이 정수에 해당하는 인덱스를 가진 유저 선택.
+//				break;
+//			}
+//			// 매칭결과 없으면 calProgressRate+10 해서 범위를 달리해서 재검색
+//			calProgressRate += 10;
+//		}
+//
+//		JsonObject jsonObject = new JsonObject();
+//		JsonArray jsonArray = new JsonArray();
+//
+//		// 매칭된 유저가 있으면
+//		if (matchUserBack != null) {
+//			JsonObject inner_jsonObject = new JsonObject();
+//
+//			inner_jsonObject.addProperty("result", "ok");
+//			inner_jsonObject.addProperty("match_user_back_email", matchUserBack.getEmail());
+//			inner_jsonObject.addProperty("match_user_back_email", matchUserBack.getEmail());
+//		} else {
+////			inner_jsonObject.addProperty("result", "not exist nickname");
+//		}
+//
+//		if (matchUserFront != null) {
+//			JsonObject inner_jsonObject = new JsonObject();
+//
+//			inner_jsonObject.addProperty("result", "ok");
+//			inner_jsonObject.addProperty("match_user_front_email", matchUserFront.getEmail());
+//			inner_jsonObject.addProperty("match_user_front_email", matchUserFront.getEmail());		} else {
+////			inner_jsonObject.addProperty("result", "not exist nickname");
+//		}
+//
+//		return ResponseEntity.ok()
+//				.header("Content-Type", "application/xml")
+//				.contentType(MediaType.APPLICATION_JSON_UTF8)
+//				.header("Access-Control-Allow-Origin", frontDomain)
+//				.header("Access-Control-Allow-Credentials", "true")
+//				.body(jsonObject.toString());
+//	}
 }

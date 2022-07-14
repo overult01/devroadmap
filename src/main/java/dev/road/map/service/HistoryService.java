@@ -28,13 +28,11 @@ public class HistoryService {
     	String result = null;
     	
     	// 유저가 해당 과목에 대해 최초로 완료 체크를 한 경우 
-    	if ( history.getIsdelete() == null) {
-    		History.builder()
-    				.user(user)
-    				.subject(subject)
-    				.isdelete(false)
-    				.build();
-    		
+    	if (history == null) {
+			history.setSubject(subject);
+			history.setUser(user);
+			history.setIsdelete(false);
+
     		result = "new subject";
 		}
     	
