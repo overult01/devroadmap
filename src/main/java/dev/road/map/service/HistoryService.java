@@ -23,8 +23,6 @@ public class HistoryService {
 	UserRepository userRepository;
 	
 	public String subjectComplete(int subject, User user) {
-//		History history = historyRepository.findByUserAndSubject(user, subject);
-
     	String result = null;
 
 		// 기존에 있었는지 따로 체크할 팔요x(어차피 save할 때 select로 확인해줌)
@@ -48,9 +46,12 @@ public class HistoryService {
 	}
 	
 	public Boolean subjectCompleteWithdraw(User user, int subject) {
-    	
-		History history = historyRepository.findByUserAndSubject(user, subject);
-    	history.setIsdelete(true);
+
+		// 기존에 있었는지 따로 체크할 팔요x(어차피 save할 때 select로 확인해줌)
+		History history = History.builder()
+				.isdelete(true)
+				.build();
+
     	historyRepository.save(history);
 
     	// user 진도율(progessRate)에도 반영
