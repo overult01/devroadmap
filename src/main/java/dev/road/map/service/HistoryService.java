@@ -23,25 +23,17 @@ public class HistoryService {
 	UserRepository userRepository;
 	
 	public String subjectComplete(int subject, User user) {
-    	History history = historyRepository.findByUserAndSubject(user, subject); 
-    	
-    	String result = null;
-    	
-    	// 유저가 해당 과목에 대해 최초로 완료 체크를 한 경우 
-    	if (history == null) {
-			history.setSubject(subject);
-			history.setUser(user);
-			history.setIsdelete(false);
+//		History history = historyRepository.findByUserAndSubject(user, subject);
 
-    		result = "new subject";
-		}
-    	
-    	// 기존에 체크 -> 해제 -> 체크 한 경우 (최초 체크가 아닌경우)
-    	else {
-			history.setIsdelete(false);
-			result = "existing subject";
-		}
-    	
+    	String result = null;
+
+		// 기존에 있었는지 따로 체크할 팔요x(어차피 save할 때 select로 확인해줌)
+		History history = History.builder()
+						.user(user)
+						.subject(subject)
+						.isdelete(false)
+						.build();
+
     	historyRepository.save(history);
 		
     	// user 진도율(progessRate)에도 반영
@@ -88,8 +80,7 @@ public class HistoryService {
     	jsonObject.add("complete_subjects", jsonArray);
     	
 //    	{"user_email":"hello@gmail.com","user_field":"back","complete_subjects":[{"object":1,"completedate":"2022-06-24 04:42:07.0"},{"object":3,"completedate":"2022-06-26 18:01:07.0"}]}    	
-    	System.out.println(jsonObject);
-    	
+
     	return jsonObject;
 	}
 	
@@ -114,9 +105,7 @@ public class HistoryService {
 			jsonObject.addProperty("object", subject);
 			jsonObject.addProperty("resp", "not yet");			
 		}
-		
-		System.out.println(jsonObject);
-		
+
 		return jsonObject;
 	}
 

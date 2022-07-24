@@ -57,9 +57,10 @@ public class HistoryController {
     	
     	// 숫자로 된 과목 표시 
     	int subject = Integer.parseInt(request.getParameter("subject"));
-    	
+		System.out.println("subject: "+subject);
+
     	String result = historyService.subjectComplete(subject, user);
-    	
+
 		return ResponseEntity.ok()
 				.header("Access-Control-Allow-Origin", frontDomain)
 				.header("Access-Control-Allow-Credentials", "true")
@@ -76,7 +77,7 @@ public class HistoryController {
     	
     	// 숫자로 된 과목 표시 
     	int subject = Integer.parseInt(request.getParameter("subject"));
-    	
+
     	historyService.subjectCompleteWithdraw(user, subject);
 		
 		return ResponseEntity.ok()
